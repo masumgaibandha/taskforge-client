@@ -9,8 +9,8 @@ import {
 const Footer = () => {
   return (
     <footer className="border-t border-slate-800 bg-slate-950">
-      <div className="container mx-auto max-w-7xl px-6 py-16">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 gap-20 md:grid-cols-3">
           {/* Brand */}
           <div className="space-y-5">
             <h2 className="text-3xl font-bold text-white">
@@ -18,8 +18,8 @@ const Footer = () => {
             </h2>
 
             <p className="max-w-md text-base leading-7 text-slate-400">
-              Connect with skilled freelancers, post tasks, hire talent, and
-              complete projects securely on one modern platform.
+              Connect with skilled freelancers, post tasks,<br/> hire talent, and
+              complete projects securely <br/>on one modern platform.
             </p>
           </div>
 
