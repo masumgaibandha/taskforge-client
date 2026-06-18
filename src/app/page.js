@@ -1,5 +1,6 @@
 import Banner from "@/components/Banner";
 import FeaturedTasks from "@/components/FeaturedTasks";
+import TopFreelancers from "@/components/TopFreelancers";
 
 
 export default function Home() {
@@ -7,6 +8,7 @@ export default function Home() {
     <>
       <Banner />
       <FeaturedTasks/>
+      <TopFreelancers/>
     </>
   );
 }
