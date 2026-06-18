@@ -6,8 +6,11 @@ import {
   Description,
   FieldError,
   Form,
+  Header,
   Input,
   Label,
+  ListBox,
+  Select,
   TextField,
 } from "@heroui/react";
 import Link from "next/link";
@@ -114,38 +117,62 @@ const RegisterPage = () => {
               <FieldError className="text-red-400" />
             </TextField>
 
-            {/* Role Toggle */}
-            <div>
-              <Label className="mb-2 block text-slate-200">Account Type</Label>
+            <input type="hidden" name="role" value={role} />
 
-              <input type="hidden" name="role" value={role} />
+            <Select
+              selectedKey={role}
+              onSelectionChange={(key) => setRole(key)}
+              className="w-full"
+            >
+              <Label className="text-slate-200">Account Type</Label>
 
-              <div className="grid grid-cols-2 rounded-2xl border border-slate-800 bg-slate-950 p-1">
-                <button
-                  type="button"
-                  onClick={() => setRole("client")}
-                  className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
-                    role === "client"
-                      ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/20"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  Client
-                </button>
+              <Select.Trigger className="flex w-full items-center justify-between rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-left text-slate-200 outline-none transition hover:border-cyan-500">
+                <Select.Value>
+                  {role === "client" ? "Client" : "Freelancer"}
+                </Select.Value>
+                <Select.Indicator className="text-slate-400" />
+              </Select.Trigger>
 
-                <button
-                  type="button"
-                  onClick={() => setRole("freelancer")}
-                  className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
-                    role === "freelancer"
-                      ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/20"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  Freelancer
-                </button>
-              </div>
-            </div>
+              <Description className="text-slate-500">
+                Select how you want to use TaskForge.
+              </Description>
+
+              <Select.Popover className="rounded-xl border border-slate-800 bg-slate-950 p-2 shadow-xl">
+                <ListBox>
+                  <ListBox.Section>
+                    <Header className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Choose Role
+                    </Header>
+
+                    <ListBox.Item
+                      id="client"
+                      textValue="Client"
+                      onAction={() => setRole("client")}
+                      className="rounded-lg px-3 py-3 text-slate-200 transition hover:bg-slate-800"
+                    >
+                      <Label>Client</Label>
+                      <Description className="text-slate-500">
+                        Post tasks and hire freelancers.
+                      </Description>
+                      <ListBox.ItemIndicator className="text-cyan-400" />
+                    </ListBox.Item>
+
+                    <ListBox.Item
+                      id="freelancer"
+                      textValue="Freelancer"
+                      onAction={() => setRole("freelancer")}
+                      className="rounded-lg px-3 py-3 text-slate-200 transition hover:bg-slate-800"
+                    >
+                      <Label>Freelancer</Label>
+                      <Description className="text-slate-500">
+                        Find tasks and earn from your skills.
+                      </Description>
+                      <ListBox.ItemIndicator className="text-cyan-400" />
+                    </ListBox.Item>
+                  </ListBox.Section>
+                </ListBox>
+              </Select.Popover>
+            </Select>
 
             <Button
               type="submit"
