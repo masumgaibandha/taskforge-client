@@ -102,7 +102,7 @@ const LoginPage = () => {
               <Label className="text-slate-200">Password</Label>
               <Input
                 placeholder="Enter your password"
-                className="text-slate-100"
+                className="text-slate-60"
               />
               <Description className="text-slate-500">
                 Enter the password you used when creating your account.
