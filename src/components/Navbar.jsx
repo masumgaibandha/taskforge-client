@@ -47,23 +47,20 @@ const Navbar = () => {
 
         {/* Desktop Actions */}
         <div className="hidden items-center gap-3 md:flex">
-          <Button
-            as={Link}
-            href="/login"
-            variant="light"
-            className="font-medium text-slate-300"
-          >
-            Login
-          </Button>
+          <Link href="/login">
+            <Button variant="light" className="font-medium text-slate-300">
+              Login
+            </Button>
+          </Link>
 
-          <Button
-            as={Link}
-            href="/register"
-            color="primary"
-            className="bg-cyan-500 font-semibold text-white"
-          >
-            Register
-          </Button>
+          <Link href="/register">
+            <Button
+              color="primary"
+              className="bg-cyan-500 font-semibold text-white"
+            >
+              Register
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Toggle */}
@@ -118,22 +115,20 @@ const Navbar = () => {
             ))}
 
             <div className="mt-4 flex flex-col gap-3 border-t border-slate-800 pt-4">
-              <Button
-                as={Link}
-                href="/login"
-                variant="bordered"
-                className="border-slate-700 text-slate-200"
-              >
-                Login
-              </Button>
+              <Link href="/login">
+                <Button
+                  variant="bordered"
+                  className="border-slate-700 text-slate-200"
+                >
+                  Login
+                </Button>
+              </Link>
 
-              <Button
-                as={Link}
-                href="/register"
-                className="bg-cyan-500 font-semibold text-white"
-              >
-                Register
-              </Button>
+              <Link href="/register">
+                <Button className="bg-cyan-500 font-semibold text-white">
+                  Register
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
