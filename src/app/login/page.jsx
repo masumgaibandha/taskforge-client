@@ -10,17 +10,51 @@ import {
   Label,
   TextField,
 } from "@heroui/react";
+import { signIn } from "@/lib/auth-client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 
 const LoginPage = () => {
-  const onSubmit = (e) => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData);
+    setIsLoading(true);
+    const toastId = toast.loading("Logging in...");
 
-    console.log(data);
+    try {
+      const formData = new FormData(e.currentTarget);
+      const data = Object.fromEntries(formData);
+
+      const res = await signIn.email({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (res?.error) {
+        toast.error(res.error.message || "Invalid email or password", {
+          id: toastId,
+        });
+        return;
+      }
+
+      toast.success("Logged in successfully", {
+        id: toastId,
+      });
+
+      router.replace("/");
+    } catch (error) {
+      toast.error(error?.message || "Something went wrong", {
+        id: toastId,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -59,49 +93,30 @@ const LoginPage = () => {
               <Label className="text-slate-200">Email Address</Label>
               <Input
                 placeholder="john@example.com"
-                className="text-slate-100"
+                className="text-slate-60"
               />
               <FieldError className="text-red-400" />
             </TextField>
 
-            <TextField
-              isRequired
-              minLength={6}
-              name="password"
-              type="password"
-              validate={(value) => {
-                if (value.length < 6) {
-                  return "Password must be at least 6 characters";
-                }
-
-                if (!/[A-Z]/.test(value)) {
-                  return "Password must contain at least one uppercase letter";
-                }
-
-                if (!/[a-z]/.test(value)) {
-                  return "Password must contain at least one lowercase letter";
-                }
-
-                return null;
-              }}
-            >
+            <TextField isRequired minLength={6} name="password" type="password">
               <Label className="text-slate-200">Password</Label>
               <Input
                 placeholder="Enter your password"
                 className="text-slate-100"
               />
               <Description className="text-slate-500">
-                Minimum 6 characters with uppercase and lowercase letters.
+                Enter the password you used when creating your account.
               </Description>
               <FieldError className="text-red-400" />
             </TextField>
 
             <Button
               type="submit"
+              isDisabled={isLoading}
               className="mt-2 w-full bg-cyan-500 font-semibold text-white shadow-lg shadow-cyan-500/20"
             >
               <Check />
-              Login
+              {isLoading ? "Logging in..." : "Login"}
             </Button>
 
             <Button
@@ -109,12 +124,13 @@ const LoginPage = () => {
               variant="bordered"
               className="w-full border-slate-700 font-medium text-slate-200"
             >
-              <FcGoogle />Continue with Google
+              <FcGoogle className="text-xl" />
+              Continue with Google
             </Button>
           </Form>
 
           <p className="mt-8 text-center text-sm text-slate-400">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/register" className="font-medium text-cyan-400">
               Create account
             </Link>

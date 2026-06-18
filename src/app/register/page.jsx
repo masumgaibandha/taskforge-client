@@ -13,22 +13,56 @@ import {
   Select,
   TextField,
 } from "@heroui/react";
+import { signUp } from "@/lib/auth-client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 
 const RegisterPage = () => {
-  const [role, setRole] = useState("client");
+  const router = useRouter();
 
-  const onSubmit = (e) => {
+  const [role, setRole] = useState("client");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData);
+    setIsLoading(true);
+    const toastId = toast.loading("Creating account...");
 
-    data.role = role;
+    try {
+      const formData = new FormData(e.currentTarget);
+      const data = Object.fromEntries(formData);
 
-    console.log(data);
+      const res = await signUp.email({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        image: data.image,
+        role,
+      });
+
+      if (res?.error) {
+        toast.error(res.error.message || "Failed to create account", {
+          id: toastId,
+        });
+        return;
+      }
+
+      toast.success("Account created successfully", {
+        id: toastId,
+      });
+
+      router.push("/login");
+    } catch (error) {
+      toast.error(error?.message || "Something went wrong", {
+        id: toastId,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -55,7 +89,7 @@ const RegisterPage = () => {
           <Form className="flex flex-col gap-5" onSubmit={onSubmit}>
             <TextField isRequired name="name">
               <Label className="text-slate-200">Full Name</Label>
-              <Input placeholder="John Smith" className="text-slate-100" />
+              <Input placeholder="John Smith" className="text-slate-60" />
               <FieldError className="text-red-400" />
             </TextField>
 
@@ -72,10 +106,7 @@ const RegisterPage = () => {
               }}
             >
               <Label className="text-slate-200">Email Address</Label>
-              <Input
-                placeholder="john@example.com"
-                className="text-slate-100"
-              />
+              <Input placeholder="john@example.com" />
               <FieldError className="text-red-400" />
             </TextField>
 
@@ -176,10 +207,11 @@ const RegisterPage = () => {
 
             <Button
               type="submit"
+              isDisabled={isLoading}
               className="mt-2 w-full bg-cyan-500 font-semibold text-white shadow-lg shadow-cyan-500/20"
             >
               <Check />
-              Create Account
+              {isLoading ? "Creating Account..." : "Create Account"}
             </Button>
 
             <Button
