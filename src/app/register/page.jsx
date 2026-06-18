@@ -141,7 +141,7 @@ const RegisterPage = () => {
               }}
             >
               <Label className="text-slate-200">Password</Label>
-              <Input placeholder="Create password" className="text-slate-100" />
+              <Input placeholder="Create password" className="text-slate-60" />
               <Description className="text-slate-500">
                 Minimum 6 characters with uppercase and lowercase letters.
               </Description>
