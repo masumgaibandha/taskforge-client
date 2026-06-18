@@ -1,4 +1,3 @@
-"use client"
 import { Button } from "@heroui/react";
 import Link from "next/link";
 
@@ -26,24 +25,23 @@ const Banner = () => {
           </p>
 
           <div className="mt-9 flex flex-col justify-center gap-4 sm:flex-row">
-            <Button
-              as={Link}
-              href="/dashboard/client/post-task"
-              size="lg"
-              className="bg-cyan-500 px-8 font-semibold text-white shadow-lg shadow-cyan-500/20"
-            >
-              Post a Task
-            </Button>
-
-            <Button
-              as={Link}
-              href="/tasks"
-              size="lg"
-              variant="bordered"
-              className="border-slate-700 px-8 font-semibold text-slate-200"
-            >
-              Browse Tasks
-            </Button>
+            <Link href="/dashboard/client/post-task">
+              <Button
+                size="lg"
+                className="bg-cyan-500 px-8 font-semibold text-white shadow-lg shadow-cyan-500/20"
+              >
+                Post a Task
+              </Button>
+            </Link>
+            <Link href="/tasks">
+              <Button
+                size="lg"
+                variant="bordered"
+                className="border-slate-700 px-8 font-semibold text-slate-200"
+              >
+                Browse Tasks
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
