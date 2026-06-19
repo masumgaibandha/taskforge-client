@@ -1,47 +1,21 @@
+import { getClientTasks } from "@/lib/api/tasks";
 import { ArrowLeft, Eye, Pencil, TrashBin } from "@gravity-ui/icons";
 import Link from "next/link";
 
-const MyTasksPage = () => {
-  const tasks = [
-    {
-      id: 1,
-      title: "Build a responsive landing page",
-      category: "Development",
-      budget: 150,
-      deadline: "2026-07-15",
-      status: "Open",
-      proposals: 8,
-    },
-    {
-      id: 2,
-      title: "Design a modern logo",
-      category: "Design",
-      budget: 80,
-      deadline: "2026-07-20",
-      status: "In Progress",
-      proposals: 5,
-    },
-    {
-      id: 3,
-      title: "Write SEO blog article",
-      category: "Writing",
-      budget: 60,
-      deadline: "2026-07-25",
-      status: "Completed",
-      proposals: 12,
-    },
-  ];
+const MyTasksPage = async () => {
+  const tasks = await getClientTasks();
 
   const getStatusStyle = (status) => {
-    if (status === "Open") return "bg-cyan-500/10 text-cyan-300";
-    if (status === "In Progress") return "bg-amber-500/10 text-amber-300";
-    return "bg-emerald-500/10 text-emerald-300";
+    if (status === "open") return "bg-cyan-500/10 text-cyan-300";
+    if (status === "in-progress") return "bg-amber-500/10 text-amber-300";
+    if (status === "completed") return "bg-emerald-500/10 text-emerald-300";
+    return "bg-slate-500/10 text-slate-300";
   };
 
   return (
     <div>
       <Link
-        href="/dashboard"
+        href="/dashboard/client"
         className="mb-6 inline-flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-300 transition hover:border-cyan-500 hover:text-cyan-400"
       >
         <ArrowLeft size={18} />
@@ -67,133 +41,164 @@ const MyTasksPage = () => {
         </Link>
       </div>
 
-      <div className="grid gap-5 lg:hidden">
-        {tasks.map((task) => (
-          <div
-            key={task.id}
-            className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h2 className="font-semibold text-white">{task.title}</h2>
-                <p className="mt-1 text-sm text-slate-400">{task.category}</p>
-              </div>
-
-              <span
-                className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(
-                  task.status,
-                )}`}
+      {tasks.length === 0 ? (
+        <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-8 text-center">
+          <h2 className="text-xl font-semibold text-white">No tasks found</h2>
+          <p className="mt-2 text-slate-400">
+            You have not posted any task yet.
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="grid gap-5 lg:hidden">
+            {tasks.map((task) => (
+              <div
+                key={task._id}
+                className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5"
               >
-                {task.status}
-              </span>
-            </div>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <h2 className="font-semibold text-white">{task.title}</h2>
+                    <p className="mt-1 text-sm text-slate-400">
+                      {task.category}
+                    </p>
+                  </div>
 
-            <div className="mt-5 grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <p className="text-slate-500">Budget</p>
-                <p className="mt-1 font-semibold text-cyan-400">
-                  ${task.budget}
-                </p>
+                  <span
+                    className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(
+                      task.status,
+                    )}`}
+                  >
+                    {task.status}
+                  </span>
+                </div>
+
+                <div className="mt-5 grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="text-slate-500">Budget</p>
+                    <p className="mt-1 font-semibold text-cyan-400">
+                      ${task.budget}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-slate-500">Deadline</p>
+                    <p className="mt-1 text-slate-300">{task.deadline}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-slate-500">Proposals</p>
+                    <p className="mt-1 text-slate-300">
+                      {task.proposalCount || 0}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-5 flex gap-2">
+                  <button className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-slate-300">
+                    <Eye className="mx-auto size-4" />
+                  </button>
+
+                  <button className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-slate-300">
+                    <Pencil className="mx-auto size-4" />
+                  </button>
+
+                  <button className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-red-400">
+                    <TrashBin className="mx-auto size-4" />
+                  </button>
+                </div>
               </div>
+            ))}
+          </div>
 
-              <div>
-                <p className="text-slate-500">Deadline</p>
-                <p className="mt-1 text-slate-300">{task.deadline}</p>
-              </div>
+          <div className="hidden overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 lg:block">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[850px] text-left">
+                <thead className="border-b border-slate-800 bg-slate-950/60">
+                  <tr>
+                    <th className="px-6 py-4 text-sm font-semibold text-slate-300">
+                      Task
+                    </th>
+                    <th className="px-6 py-4 text-sm font-semibold text-slate-300">
+                      Category
+                    </th>
+                    <th className="px-6 py-4 text-sm font-semibold text-slate-300">
+                      Budget
+                    </th>
+                    <th className="px-6 py-4 text-sm font-semibold text-slate-300">
+                      Deadline
+                    </th>
+                    <th className="px-6 py-4 text-sm font-semibold text-slate-300">
+                      Proposals
+                    </th>
+                    <th className="px-6 py-4 text-sm font-semibold text-slate-300">
+                      Status
+                    </th>
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-slate-300">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
 
-              <div>
-                <p className="text-slate-500">Proposals</p>
-                <p className="mt-1 text-slate-300">{task.proposals}</p>
-              </div>
-            </div>
+                <tbody>
+                  {tasks.map((task) => (
+                    <tr
+                      key={task._id}
+                      className="border-b border-slate-800/70 transition hover:bg-slate-800/40"
+                    >
+                      <td className="px-6 py-5">
+                        <p className="font-semibold text-white">{task.title}</p>
+                      </td>
 
-            <div className="mt-5 flex gap-2">
-              <button className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-slate-300">
-                <Eye className="mx-auto size-4" />
-              </button>
-              <button className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-slate-300">
-                <Pencil className="mx-auto size-4" />
-              </button>
-              <button className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-red-400">
-                <TrashBin className="mx-auto size-4" />
-              </button>
+                      <td className="px-6 py-5 text-slate-400">
+                        {task.category}
+                      </td>
+
+                      <td className="px-6 py-5 font-semibold text-cyan-400">
+                        ${task.budget}
+                      </td>
+
+                      <td className="px-6 py-5 text-slate-400">
+                        {task.deadline}
+                      </td>
+
+                      <td className="px-6 py-5 text-slate-400">
+                        {task.proposalCount || 0}
+                      </td>
+
+                      <td className="px-6 py-5">
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(
+                            task.status,
+                          )}`}
+                        >
+                          {task.status}
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-5">
+                        <div className="flex justify-end gap-2">
+                          <button className="rounded-lg border border-slate-700 p-2 text-slate-300">
+                            <Eye className="size-4" />
+                          </button>
+
+                          <button className="rounded-lg border border-slate-700 p-2 text-slate-300">
+                            <Pencil className="size-4" />
+                          </button>
+
+                          <button className="rounded-lg border border-slate-700 p-2 text-red-400">
+                            <TrashBin className="size-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
-        ))}
-      </div>
-
-      <div className="hidden overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 lg:block">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[850px] text-left">
-            <thead className="border-b border-slate-800 bg-slate-950/60">
-              <tr>
-                <th className="px-6 py-4 text-sm font-semibold text-slate-300">
-                  Task
-                </th>
-                <th className="px-6 py-4 text-sm font-semibold text-slate-300">
-                  Category
-                </th>
-                <th className="px-6 py-4 text-sm font-semibold text-slate-300">
-                  Budget
-                </th>
-                <th className="px-6 py-4 text-sm font-semibold text-slate-300">
-                  Deadline
-                </th>
-                <th className="px-6 py-4 text-sm font-semibold text-slate-300">
-                  Proposals
-                </th>
-                <th className="px-6 py-4 text-sm font-semibold text-slate-300">
-                  Status
-                </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-slate-300">
-                  Action
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {tasks.map((task) => (
-                <tr
-                  key={task.id}
-                  className="border-b border-slate-800/70 transition hover:bg-slate-800/40"
-                >
-                  <td className="px-6 py-5">
-                    <p className="font-semibold text-white">{task.title}</p>
-                  </td>
-                  <td className="px-6 py-5 text-slate-400">{task.category}</td>
-                  <td className="px-6 py-5 font-semibold text-cyan-400">
-                    ${task.budget}
-                  </td>
-                  <td className="px-6 py-5 text-slate-400">{task.deadline}</td>
-                  <td className="px-6 py-5 text-slate-400">{task.proposals}</td>
-                  <td className="px-6 py-5">
-                    <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(
-                        task.status,
-                      )}`}
-                    >
-                      {task.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-5">
-                    <div className="flex justify-end gap-2">
-                      <button className="rounded-lg border border-slate-700 p-2 text-slate-300">
-                        <Eye className="size-4" />
-                      </button>
-                      <button className="rounded-lg border border-slate-700 p-2 text-slate-300">
-                        <Pencil className="size-4" />
-                      </button>
-                      <button className="rounded-lg border border-slate-700 p-2 text-red-400">
-                        <TrashBin className="size-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };

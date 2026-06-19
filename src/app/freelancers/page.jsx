@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const FreelancerPage = () => {
   const freelancers = [
     {
@@ -51,11 +53,8 @@ const FreelancerPage = () => {
               key={freelancer.name}
               className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 text-center"
             >
-              <img
-                src={freelancer.image}
-                alt={freelancer.name}
-                className="mx-auto h-24 w-24 rounded-full object-cover"
-              />
+    
+              <Image src={freelancer.image} alt={freelancer.name} width={100} height={100} className="mx-auto h-24 w-24 rounded-full object-cover"/>
 
               <h2 className="mt-4 text-xl font-semibold text-white">
                 {freelancer.name}

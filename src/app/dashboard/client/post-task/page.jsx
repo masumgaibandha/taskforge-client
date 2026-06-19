@@ -1,6 +1,9 @@
 "use client";
 
+import { createTask } from "@/lib/actions/tasks";
+import { useSession } from "@/lib/auth-client";
 import { ArrowLeft } from "@gravity-ui/icons";
+
 import {
   Button,
   FieldError,
@@ -11,25 +14,70 @@ import {
   TextField,
 } from "@heroui/react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { useRef, useState } from "react";
+
+import toast from "react-hot-toast";
 
 const PostTaskPage = () => {
-  const onSubmit = (e) => {
+  const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
+  const formRef = useRef(null);
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData);
-    console.log(data);
+
+    setIsLoading(true);
+
+    try {
+      const formData = new FormData(e.currentTarget);
+      const data = Object.fromEntries(formData);
+
+      const payload = {
+        title: formData.get("title"),
+        category: formData.get("category"),
+        budget: Number(formData.get("budget")),
+        deadline: formData.get("deadline"),
+        description: formData.get("description"),
+        taskId: `task_${Date.now()}`,
+
+        clientName: session.user.name,
+        clientEmail: session.user.email,
+
+        status: "open",
+        proposalCount: 0,
+
+        createdAt: new Date().toISOString(),
+      };
+
+      const res = await createTask(payload);
+
+      if (res.insertedId) {
+        toast.success("Task created successfully!");
+        e.target.reset();
+      } else {
+        toast.error("Failed to create task.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong.");
+    } finally {
+      setIsLoading(false);
+      redirect("/dashboard/client/my-tasks");
+    }
   };
 
   return (
     <section className="min-h-screen bg-slate-950 py-16 text-white">
       <div className="container mx-auto max-w-5xl px-4">
         <Link
-          href="/dashboard"
+          href="/dashboard/client"
           className="mb-6 inline-flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-300 transition hover:border-cyan-500 hover:text-cyan-400"
         >
           <ArrowLeft size={18} />
           Back to Dashboard
         </Link>
+
         <div className="mb-8">
           <p className="text-sm font-semibold text-cyan-400">Client</p>
           <h1 className="mt-2 text-4xl font-bold">Post a Task</h1>
@@ -40,7 +88,11 @@ const PostTaskPage = () => {
         </div>
 
         <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-2xl shadow-cyan-500/10 md:p-8">
-          <Form className="flex flex-col gap-6" onSubmit={onSubmit}>
+          <Form
+            ref={formRef}
+            className="flex flex-col gap-6"
+            onSubmit={onSubmit}
+          >
             <div className="grid gap-5 md:grid-cols-2">
               <TextField isRequired name="title">
                 <Label className="text-slate-200">Task Title</Label>
@@ -101,9 +153,10 @@ const PostTaskPage = () => {
 
             <Button
               type="submit"
+              isDisabled={isLoading}
               className="h-12 w-full rounded-xl bg-cyan-500 font-semibold text-white shadow-lg shadow-cyan-500/20"
             >
-              Publish Task
+              {isLoading ? "Publishing..." : "Publish Task"}
             </Button>
           </Form>
         </div>
