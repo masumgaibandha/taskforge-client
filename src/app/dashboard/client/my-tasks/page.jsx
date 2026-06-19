@@ -1,4 +1,4 @@
-import { Eye, Pencil, TrashBin } from "@gravity-ui/icons";
+import { ArrowLeft, Eye, Pencil, TrashBin } from "@gravity-ui/icons";
 import Link from "next/link";
 
 const MyTasksPage = () => {
@@ -40,11 +40,21 @@ const MyTasksPage = () => {
 
   return (
     <div>
-      <div className="mb-8 flex flex-col justify-between gap-4 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 md:flex-row md:items-center">
+      <Link
+        href="/dashboard"
+        className="mb-6 inline-flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-300 transition hover:border-cyan-500 hover:text-cyan-400"
+      >
+        <ArrowLeft size={18} />
+        Back to Dashboard
+      </Link>
+
+      <div className="mb-8 flex flex-col justify-between gap-4 rounded-3xl border border-slate-800 bg-slate-900/70 p-5 md:flex-row md:items-center md:p-6">
         <div>
           <p className="text-sm font-semibold text-cyan-400">Client</p>
-          <h1 className="mt-2 text-3xl font-bold text-white">My Tasks</h1>
-          <p className="mt-2 text-slate-400">
+          <h1 className="mt-2 text-2xl font-bold text-white md:text-3xl">
+            My Tasks
+          </h1>
+          <p className="mt-2 text-sm leading-6 text-slate-400 md:text-base">
             View, edit, and manage all tasks you have posted.
           </p>
         </div>
@@ -57,7 +67,62 @@ const MyTasksPage = () => {
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70">
+      <div className="grid gap-5 lg:hidden">
+        {tasks.map((task) => (
+          <div
+            key={task.id}
+            className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h2 className="font-semibold text-white">{task.title}</h2>
+                <p className="mt-1 text-sm text-slate-400">{task.category}</p>
+              </div>
+
+              <span
+                className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(
+                  task.status,
+                )}`}
+              >
+                {task.status}
+              </span>
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-slate-500">Budget</p>
+                <p className="mt-1 font-semibold text-cyan-400">
+                  ${task.budget}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-slate-500">Deadline</p>
+                <p className="mt-1 text-slate-300">{task.deadline}</p>
+              </div>
+
+              <div>
+                <p className="text-slate-500">Proposals</p>
+                <p className="mt-1 text-slate-300">{task.proposals}</p>
+              </div>
+            </div>
+
+            <div className="mt-5 flex gap-2">
+              <button className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-slate-300">
+                <Eye className="mx-auto size-4" />
+              </button>
+              <button className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-slate-300">
+                <Pencil className="mx-auto size-4" />
+              </button>
+              <button className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-red-400">
+                <TrashBin className="mx-auto size-4" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 lg:block">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[850px] text-left">
             <thead className="border-b border-slate-800 bg-slate-950/60">
@@ -95,17 +160,12 @@ const MyTasksPage = () => {
                   <td className="px-6 py-5">
                     <p className="font-semibold text-white">{task.title}</p>
                   </td>
-
                   <td className="px-6 py-5 text-slate-400">{task.category}</td>
-
                   <td className="px-6 py-5 font-semibold text-cyan-400">
                     ${task.budget}
                   </td>
-
                   <td className="px-6 py-5 text-slate-400">{task.deadline}</td>
-
                   <td className="px-6 py-5 text-slate-400">{task.proposals}</td>
-
                   <td className="px-6 py-5">
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(
@@ -115,18 +175,15 @@ const MyTasksPage = () => {
                       {task.status}
                     </span>
                   </td>
-
                   <td className="px-6 py-5">
                     <div className="flex justify-end gap-2">
-                      <button className="rounded-lg border border-slate-700 p-2 text-slate-300 transition hover:border-cyan-500 hover:text-cyan-400">
+                      <button className="rounded-lg border border-slate-700 p-2 text-slate-300">
                         <Eye className="size-4" />
                       </button>
-
-                      <button className="rounded-lg border border-slate-700 p-2 text-slate-300 transition hover:border-amber-500 hover:text-amber-400">
+                      <button className="rounded-lg border border-slate-700 p-2 text-slate-300">
                         <Pencil className="size-4" />
                       </button>
-
-                      <button className="rounded-lg border border-slate-700 p-2 text-slate-300 transition hover:border-red-500 hover:text-red-400">
+                      <button className="rounded-lg border border-slate-700 p-2 text-red-400">
                         <TrashBin className="size-4" />
                       </button>
                     </div>
