@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowLeft } from "@gravity-ui/icons";
 import {
   Button,
   FieldError,
@@ -9,6 +10,7 @@ import {
   TextArea,
   TextField,
 } from "@heroui/react";
+import Link from "next/link";
 
 const PostTaskPage = () => {
   const onSubmit = (e) => {
@@ -21,6 +23,13 @@ const PostTaskPage = () => {
   return (
     <section className="min-h-screen bg-slate-950 py-16 text-white">
       <div className="container mx-auto max-w-5xl px-4">
+        <Link
+          href="/dashboard"
+          className="mb-6 inline-flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-300 transition hover:border-cyan-500 hover:text-cyan-400"
+        >
+          <ArrowLeft size={18} />
+          Back to Dashboard
+        </Link>
         <div className="mb-8">
           <p className="text-sm font-semibold text-cyan-400">Client</p>
           <h1 className="mt-2 text-4xl font-bold">Post a Task</h1>

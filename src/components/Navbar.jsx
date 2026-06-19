@@ -1,5 +1,6 @@
 "use client";
 
+
 import { signOut, useSession } from "@/lib/auth-client";
 import { Avatar, Button, Link } from "@heroui/react";
 import Image from "next/image";
@@ -11,6 +12,7 @@ const Navbar = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session, isPending } = useSession();
+  
 
   const user = session?.user;
 

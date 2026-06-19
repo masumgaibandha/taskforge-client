@@ -1,19 +1,16 @@
 "use client";
 
+import { signOut, signUp } from "@/lib/auth-client";
 import { Check } from "@gravity-ui/icons";
 import {
   Button,
   Description,
   FieldError,
   Form,
-  Header,
   Input,
   Label,
-  ListBox,
-  Select,
   TextField,
 } from "@heroui/react";
-import { signUp } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -23,11 +20,13 @@ import { FcGoogle } from "react-icons/fc";
 const RegisterPage = () => {
   const router = useRouter();
 
-  const [role, setRole] = useState("client");
+  const [role, setRole] = useState("freelancer");
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
+    if (isLoading) return;
 
     setIsLoading(true);
     const toastId = toast.loading("Creating account...");
@@ -40,7 +39,7 @@ const RegisterPage = () => {
         name: data.name,
         email: data.email,
         password: data.password,
-        image: data.image,
+        image: data.image || undefined,
         role,
       });
 
@@ -51,11 +50,14 @@ const RegisterPage = () => {
         return;
       }
 
-      toast.success("Account created successfully", {
+      await signOut();
+
+      toast.success("Account created. Please login.", {
         id: toastId,
       });
 
-      router.push("/login");
+      router.replace("/login");
+      router.refresh();
     } catch (error) {
       toast.error(error?.message || "Something went wrong", {
         id: toastId,
@@ -89,7 +91,7 @@ const RegisterPage = () => {
           <Form className="flex flex-col gap-5" onSubmit={onSubmit}>
             <TextField isRequired name="name">
               <Label className="text-slate-200">Full Name</Label>
-              <Input placeholder="John Smith" className="text-slate-60" />
+              <Input placeholder="John Smith" />
               <FieldError className="text-red-400" />
             </TextField>
 
@@ -110,12 +112,12 @@ const RegisterPage = () => {
               <FieldError className="text-red-400" />
             </TextField>
 
-            <TextField isRequired name="image" type="url">
+            <TextField name="image" type="url">
               <Label className="text-slate-200">Image URL</Label>
-              <Input
-                placeholder="https://example.com/photo.jpg"
-                className="text-slate-100"
-              />
+              <Input placeholder="https://example.com/photo.jpg" />
+              <Description className="text-slate-500">
+                Optional. Add a profile image URL.
+              </Description>
               <FieldError className="text-red-400" />
             </TextField>
 
@@ -141,7 +143,7 @@ const RegisterPage = () => {
               }}
             >
               <Label className="text-slate-200">Password</Label>
-              <Input placeholder="Create password" className="text-slate-60" />
+              <Input placeholder="Create password" />
               <Description className="text-slate-500">
                 Minimum 6 characters with uppercase and lowercase letters.
               </Description>
@@ -150,60 +152,39 @@ const RegisterPage = () => {
 
             <input type="hidden" name="role" value={role} />
 
-            <Select
-              selectedKey={role}
-              onSelectionChange={(key) => setRole(key)}
-              className="w-full"
-            >
+            <div className="space-y-3">
               <Label className="text-slate-200">Account Type</Label>
 
-              <Select.Trigger className="flex w-full items-center justify-between rounded-xl border border-slate-800 bg-slate-950 px-4 py-3 text-left text-slate-200 outline-none transition hover:border-cyan-500">
-                <Select.Value>
-                  {role === "client" ? "Client" : "Freelancer"}
-                </Select.Value>
-                <Select.Indicator className="text-slate-400" />
-              </Select.Trigger>
+              <div className="flex rounded-xl border border-slate-800 bg-slate-950 p-1">
+                <button
+                  type="button"
+                  onClick={() => setRole("freelancer")}
+                  className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition ${
+                    role === "freelancer"
+                      ? "bg-cyan-500 text-white"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  Freelancer
+                </button>
 
-              <Description className="text-slate-500">
+                <button
+                  type="button"
+                  onClick={() => setRole("client")}
+                  className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition ${
+                    role === "client"
+                      ? "bg-cyan-500 text-white"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  Client
+                </button>
+              </div>
+
+              <p className="text-xs text-slate-500">
                 Select how you want to use TaskForge.
-              </Description>
-
-              <Select.Popover className="rounded-xl border border-slate-800 bg-slate-950 p-2 shadow-xl">
-                <ListBox>
-                  <ListBox.Section>
-                    <Header className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Choose Role
-                    </Header>
-
-                    <ListBox.Item
-                      id="client"
-                      textValue="Client"
-                      onAction={() => setRole("client")}
-                      className="rounded-lg px-3 py-3 text-slate-200 transition hover:bg-slate-800"
-                    >
-                      <Label>Client</Label>
-                      <Description className="text-slate-500">
-                        Post tasks and hire freelancers.
-                      </Description>
-                      <ListBox.ItemIndicator className="text-cyan-400" />
-                    </ListBox.Item>
-
-                    <ListBox.Item
-                      id="freelancer"
-                      textValue="Freelancer"
-                      onAction={() => setRole("freelancer")}
-                      className="rounded-lg px-3 py-3 text-slate-200 transition hover:bg-slate-800"
-                    >
-                      <Label>Freelancer</Label>
-                      <Description className="text-slate-500">
-                        Find tasks and earn from your skills.
-                      </Description>
-                      <ListBox.ItemIndicator className="text-cyan-400" />
-                    </ListBox.Item>
-                  </ListBox.Section>
-                </ListBox>
-              </Select.Popover>
-            </Select>
+              </p>
+            </div>
 
             <Button
               type="submit"
