@@ -13,3 +13,15 @@ export const createProposal = async (proposalData) => {
 
   return res.json();
 };
+
+export const updateProposalStatus = async (proposalId, status) => {
+  const res = await fetch(`${baseUrl}/api/proposals/${proposalId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  return res.json();
+};
