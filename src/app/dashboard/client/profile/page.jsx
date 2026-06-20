@@ -1,22 +1,75 @@
 "use client";
 
-import { Avatar, Button, Card, Chip, Input, TextArea } from "@heroui/react";
+import { updateUserProfile } from "@/lib/actions/users";
+import { getUserProfile } from "@/lib/api/users";
+import { useSession } from "@/lib/auth-client";
 import { Envelope, Pencil } from "@gravity-ui/icons";
-import { FiCheckCircle, FiGlobe, FiMapPin, FiPhone } from "react-icons/fi";
+import { Avatar, Button, Card, Chip, Input, TextArea } from "@heroui/react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { FiCheckCircle, FiGlobe, FiMapPin, FiPhone } from "react-icons/fi";
 
 const ClientProfile = () => {
-  const handleSave = (e) => {
+  const { data: session } = useSession();
+  const user = session?.user;
+
+  const [profile, setProfile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (!user?.email) return;
+
+      const data = await getUserProfile(user.email);
+      setProfile(data);
+    };
+
+    loadProfile();
+  }, [user?.email]);
+
+  const handleSave = async (e) => {
     e.preventDefault();
-    toast.success("Profile updated successfully");
+
+    if (!user?.email) {
+      toast.error("User email not found");
+      return;
+    }
+
+    setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+
+    const profileData = {
+      name: formData.get("name") || user?.name || "Client",
+      image: formData.get("image") || displayImage,
+      phone: formData.get("phone"),
+      location: formData.get("location"),
+      website: formData.get("website"),
+      bio: formData.get("bio"),
+    };
+
+    const res = await updateUserProfile(user.email, profileData);
+
+    if (res.modifiedCount > 0) {
+      toast.success("Profile updated successfully");
+
+      setProfile((prev) => ({
+        ...prev,
+        ...profileData,
+        email: user.email,
+        role: user.role,
+      }));
+    } else {
+      toast.error("No changes were made");
+    }
+
+    setIsLoading(false);
   };
 
-  const stats = [
-    { label: "Total Tasks", value: "12" },
-    { label: "Open Tasks", value: "4" },
-    { label: "In Progress", value: "3" },
-    { label: "Total Spent", value: "$1,250" },
-  ];
+  const displayName = profile?.name || user?.name || "Client";
+  const displayEmail = user?.email || profile?.email || "No email";
+  const displayImage =
+    profile?.image || user?.image || "/assets/default-avatar.png";
 
   return (
     <section className="min-h-screen bg-slate-950 py-8">
@@ -33,15 +86,12 @@ const ClientProfile = () => {
             <div className="p-6">
               <div className="flex flex-col items-center text-center">
                 <Avatar className="h-28 w-28 border-3 border-cyan-500">
-                  <Avatar.Image
-                    alt="Abdullah Al Masum"
-                    src="https://i.ibb.co/S45GCys8/Final-removebg-preview-1.png"
-                  />
-                  <Avatar.Fallback>AM</Avatar.Fallback>
+                  <Avatar.Image alt={displayName} src={displayImage} />
+                  <Avatar.Fallback>{displayName?.[0] || "C"}</Avatar.Fallback>
                 </Avatar>
 
                 <h2 className="mt-5 text-xl font-semibold text-white">
-                  Abdullah Al Masum
+                  {displayName}
                 </h2>
 
                 <p className="mt-1 text-sm text-slate-400">Client Account</p>
@@ -53,10 +103,19 @@ const ClientProfile = () => {
               </div>
 
               <div className="mt-8 space-y-4">
-                <ProfileInfo icon={Envelope} text="client@example.com" />
-                <ProfileInfo icon={FiPhone} text="+880 1234 567890" />
-                <ProfileInfo icon={FiMapPin} text="Dhaka, Bangladesh" />
-                <ProfileInfo icon={FiGlobe} text="taskforge.com" />
+                <ProfileInfo icon={Envelope} text={displayEmail} />
+                <ProfileInfo
+                  icon={FiPhone}
+                  text={profile?.phone || "Not provided"}
+                />
+                <ProfileInfo
+                  icon={FiMapPin}
+                  text={profile?.location || "Not provided"}
+                />
+                <ProfileInfo
+                  icon={FiGlobe}
+                  text={profile?.website || "Not provided"}
+                />
               </div>
             </div>
           </Card>
@@ -79,68 +138,74 @@ const ClientProfile = () => {
                 </Button>
               </div>
 
-              <form onSubmit={handleSave} className="grid gap-5">
+              <form
+                key={profile?._id || user?.email}
+                onSubmit={handleSave}
+                className="grid gap-5"
+              >
                 <div className="grid gap-5 md:grid-cols-2">
-                  <Input label="Full Name" defaultValue="Abdullah Al Masum" />
                   <Input
+                    name="name"
+                    label="Full Name"
+                    defaultValue={displayName}
+                  />
+
+                  <Input
+                    name="email"
                     label="Email Address"
-                    defaultValue="client@example.com"
+                    defaultValue={displayEmail}
+                    readOnly
                   />
                 </div>
 
                 <div className="grid gap-5 md:grid-cols-2">
-                  <Input label="Phone Number" defaultValue="+880 1234 567890" />
-                  <Input label="Location" defaultValue="Dhaka, Bangladesh" />
+                  <Input
+                    name="phone"
+                    label="Phone Number"
+                    defaultValue={profile?.phone || ""}
+                    placeholder="Phone Number"
+                  />
+
+                  <Input
+                    name="location"
+                    label="Location"
+                    defaultValue={profile?.location || ""}
+                    placeholder="Your Location"
+                  />
                 </div>
 
                 <Input
+                  name="image"
                   label="Profile Image URL"
-                  defaultValue="https://i.ibb.co/S45GCys8/Final-removebg-preview-1.png"
+                  defaultValue={displayImage}
                 />
 
-                <Input label="Website" defaultValue="https://taskforge.com" />
+                <Input
+                  name="website"
+                  label="Website"
+                  defaultValue={profile?.website || ""}
+                  placeholder="https://example.com"
+                />
 
                 <TextArea
+                  name="bio"
                   label="About Client"
-                  defaultValue="I post micro-tasks and hire skilled freelancers for fast, reliable project delivery."
+                  defaultValue={profile?.bio || ""}
                   className="min-h-32 text-slate-600"
                 />
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                   <Button
-                    type="button"
-                    variant="outline"
-                    className="border-slate-700 text-slate-300"
-                  >
-                    Cancel
-                  </Button>
-
-                  <Button
                     type="submit"
+                    isDisabled={isLoading}
                     className="bg-cyan-500 font-semibold text-slate-950"
                   >
-                    Save Changes
+                    {isLoading ? "Saving..." : "Save Changes"}
                   </Button>
                 </div>
               </form>
             </div>
           </Card>
-        </div>
-
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((item) => (
-            <Card
-              key={item.label}
-              className="rounded-3xl border border-slate-800 bg-slate-900/70 shadow-2xl shadow-cyan-500/10"
-            >
-              <div className="p-5">
-                <p className="text-sm text-slate-400">{item.label}</p>
-                <h3 className="mt-2 text-2xl font-bold text-white">
-                  {item.value}
-                </h3>
-              </div>
-            </Card>
-          ))}
         </div>
       </div>
     </section>
