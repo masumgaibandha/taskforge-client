@@ -1,10 +1,14 @@
 import { getProposals } from "@/lib/api/proposals";
 import { ArrowLeft, Check, Xmark } from "@gravity-ui/icons";
 import Link from "next/link";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const ProposalsPage = async () => {
-  const proposals = await getProposals();
-  
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const proposals = await getProposals(session?.user?.email);
 
   return (
     <div>
@@ -37,7 +41,9 @@ const ProposalsPage = async () => {
                 <h2 className="font-semibold text-white">
                   {proposal.freelancerName}
                 </h2>
-                <p className="mt-1 text-sm text-slate-400">{proposal.taskTitle}</p>
+                <p className="mt-1 text-sm text-slate-400">
+                  {proposal.taskTitle}
+                </p>
               </div>
 
               <span className="rounded-full bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-300">
@@ -97,7 +103,9 @@ const ProposalsPage = async () => {
                   <td className="px-6 py-5 text-white">
                     {proposal.freelancerName}
                   </td>
-                  <td className="px-6 py-5 text-slate-400">{proposal.taskTitle}</td>
+                  <td className="px-6 py-5 text-slate-400">
+                    {proposal.taskTitle}
+                  </td>
                   <td className="px-6 py-5 font-semibold text-cyan-400">
                     ${proposal.bidAmount}
                   </td>

@@ -9,3 +9,4 @@ const ProposalPage = async ({ params }) => {
 };
 
 export default ProposalPage;
+
