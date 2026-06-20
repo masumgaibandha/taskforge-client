@@ -1,11 +1,15 @@
 import { getFreelancerProposals } from "@/lib/api/proposals";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 const MyProposalsPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+  if (session?.user?.role !== "freelancer") {
+    redirect("/dashboard/client");
+  }
 
   const proposals = await getFreelancerProposals(session?.user?.email);
 

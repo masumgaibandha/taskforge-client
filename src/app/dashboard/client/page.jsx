@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { Briefcase, CircleCheck, Clock, CreditCard } from "@gravity-ui/icons";
 import Link from "next/link";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 const ClientDashboard = async () => {
   const session = await auth.api.getSession({
@@ -11,6 +12,9 @@ const ClientDashboard = async () => {
   });
 
   const user = session?.user;
+  if (user?.role !== "client") {
+    redirect("/dashboard/freelancer");
+  }
 
   const tasks = await getClientTasks(user?.email);
   const proposals = await getProposals(user?.email);
