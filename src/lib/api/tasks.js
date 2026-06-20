@@ -15,3 +15,11 @@ export const getClientTasks = async (clientEmail) => {
 
   return res.json();
 };
+
+export const getTaskById = async (id) => {
+  const res = await fetch(`${baseUrl}/api/tasks/${id}`, {
+    cache: "no-store",
+  });
+
+  return res.json();
+};

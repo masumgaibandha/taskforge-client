@@ -1,8 +1,12 @@
-const TasksPage = () => {
+import { getClientTasks } from "@/lib/api/tasks";
+import Link from "next/link";
+
+const TasksPage = async () => {
+  const tasks = await getClientTasks();
+
   return (
     <section className="min-h-screen bg-slate-950 py-16 text-white">
       <div className="container mx-auto px-4">
-        {/* Header */}
         <div className="mb-10">
           <p className="text-sm font-semibold text-cyan-400">Browse Tasks</p>
 
@@ -16,15 +20,14 @@ const TasksPage = () => {
           </p>
         </div>
 
-        {/* Search & Filter */}
         <div className="mb-8 grid gap-4 rounded-2xl border border-slate-800 bg-slate-900/50 p-5 md:grid-cols-3">
           <input
             type="text"
             placeholder="Search tasks..."
-            className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none"
+            className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-300 outline-none"
           />
 
-          <select className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 outline-none">
+          <select className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-300 outline-none">
             <option>All Categories</option>
             <option>Design</option>
             <option>Writing</option>
@@ -38,61 +41,60 @@ const TasksPage = () => {
           </button>
         </div>
 
-        {/* Tasks Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3, 4, 5, 6].map((task) => (
-            <div
-              key={task}
-              className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6"
-            >
-              <span className="rounded-full bg-cyan-500/10 px-3 py-1 text-xs text-cyan-300">
-                Development
-              </span>
+        {tasks.length === 0 ? (
+          <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-8 text-center">
+            <h2 className="text-xl font-semibold text-white">No tasks found</h2>
+            <p className="mt-2 text-slate-400">
+              There are no open tasks available right now.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {tasks.map((task) => (
+              <div
+                key={task._id}
+                className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6"
+              >
+                <span className="rounded-full bg-cyan-500/10 px-3 py-1 text-xs text-cyan-300">
+                  {task.category}
+                </span>
 
-              <h2 className="mt-4 text-xl font-semibold">
-                Build a Landing Page
-              </h2>
+                <h2 className="mt-4 text-xl font-semibold text-white">
+                  {task.title}
+                </h2>
 
-              <p className="mt-3 text-sm text-slate-400">
-                Looking for a React developer to build a responsive landing
-                page.
-              </p>
-
-              <div className="mt-5 space-y-2 text-sm">
-                <p>
-                  Budget: <span className="text-cyan-400">$150</span>
+                <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-400">
+                  {task.description}
                 </p>
 
-                <p className="text-slate-400">Deadline: July 15, 2026</p>
+                <div className="mt-5 space-y-2 text-sm">
+                  <p>
+                    Budget:{" "}
+                    <span className="font-semibold text-cyan-400">
+                      ${task.budget}
+                    </span>
+                  </p>
+
+                  <p className="text-slate-400">
+                    Deadline:{" "}
+                    <span className="whitespace-nowrap">{task.deadline}</span>
+                  </p>
+
+                  <p className="text-slate-400">
+                    Client: {task.clientName || "Unknown"}
+                  </p>
+                </div>
+
+                <Link
+                  href={`/tasks/${task._id}`}
+                  className="mt-5 block w-full rounded-xl bg-cyan-500 py-2 text-center font-semibold text-white"
+                >
+                  View Details
+                </Link>
               </div>
-
-              <button className="mt-5 w-full rounded-xl bg-cyan-500 py-2 font-semibold">
-                View Details
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Pagination */}
-        <div className="mt-12 flex justify-center gap-2">
-          <button className="rounded-lg border border-slate-700 px-4 py-2">
-            Previous
-          </button>
-
-          <button className="rounded-lg bg-cyan-500 px-4 py-2">1</button>
-
-          <button className="rounded-lg border border-slate-700 px-4 py-2">
-            2
-          </button>
-
-          <button className="rounded-lg border border-slate-700 px-4 py-2">
-            3
-          </button>
-
-          <button className="rounded-lg border border-slate-700 px-4 py-2">
-            Next
-          </button>
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
