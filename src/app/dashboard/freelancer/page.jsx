@@ -37,7 +37,9 @@ const FreelancerDashboardPage = async () => {
           Freelancer Dashboard
         </p>
 
-        <h1 className="mt-2 text-3xl font-bold text-white">Welcome Back</h1>
+        <h1 className="mt-2 text-3xl font-bold text-white">
+          Welcome back, {session?.user?.name || "Freelancer"}
+        </h1>
 
         <p className="mt-2 text-slate-400">
           Manage your proposals, track task progress, and grow your freelance

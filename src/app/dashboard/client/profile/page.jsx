@@ -8,12 +8,15 @@ import { Avatar, Button, Card, Chip, Input, TextArea } from "@heroui/react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FiCheckCircle, FiGlobe, FiMapPin, FiPhone } from "react-icons/fi";
+import { getClientTasks } from "@/lib/api/tasks";
+import { getProposals } from "@/lib/api/proposals";
 
 const ClientProfile = () => {
   const { data: session } = useSession();
   const user = session?.user;
 
   const [profile, setProfile] = useState(null);
+  const [stats, setStats] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -21,7 +24,27 @@ const ClientProfile = () => {
       if (!user?.email) return;
 
       const data = await getUserProfile(user.email);
+      const tasks = await getClientTasks(user.email);
+      const proposals = await getProposals(user.email);
+
       setProfile(data);
+
+      setStats([
+        { label: "Total Tasks", value: tasks.length },
+        {
+          label: "Open Tasks",
+          value: tasks.filter((task) => task.status === "open").length,
+        },
+        {
+          label: "In Progress",
+          value: tasks.filter((task) => task.status === "in-progress").length,
+        },
+        {
+          label: "Hired",
+          value: proposals.filter((proposal) => proposal.status === "accepted")
+            .length,
+        },
+      ]);
     };
 
     loadProfile();
