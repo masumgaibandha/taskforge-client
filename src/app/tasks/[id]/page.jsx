@@ -3,7 +3,8 @@ import { ArrowLeft } from "@gravity-ui/icons";
 import Link from "next/link";
 
 const TaskDetailsPage = async ({ params }) => {
-  const task = await getTaskById(params.id);
+  const { id } = await params;
+  const task = await getTaskById(id);
 
   return (
     <section className="min-h-screen bg-slate-950 py-16 text-white">

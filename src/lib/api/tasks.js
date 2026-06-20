@@ -1,10 +1,3 @@
-// const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-// export const getClientTasks = async (taskId, status = "active") => {
-//   const res = await fetch(
-//     `${baseUrl}/api/tasks?taskId=${taskId}&status=${status}`,
-//   );
-//   return res.json();
-// };
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
