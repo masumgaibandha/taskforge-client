@@ -95,14 +95,14 @@ const ProposalsPage = async () => {
                   className="border-b border-slate-800/70 transition hover:bg-slate-800/40"
                 >
                   <td className="px-6 py-5 text-white">
-                    {proposal.freelancer}
+                    {proposal.freelancerName}
                   </td>
-                  <td className="px-6 py-5 text-slate-400">{proposal.task}</td>
+                  <td className="px-6 py-5 text-slate-400">{proposal.taskTitle}</td>
                   <td className="px-6 py-5 font-semibold text-cyan-400">
-                    ${proposal.amount}
+                    ${proposal.bidAmount}
                   </td>
                   <td className="px-6 py-5 text-slate-400">
-                    {proposal.delivery}
+                    {proposal.deliveryTime}
                   </td>
                   <td className="px-6 py-5">
                     <span className="rounded-full bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-300">
@@ -111,10 +111,10 @@ const ProposalsPage = async () => {
                   </td>
                   <td className="px-6 py-5">
                     <div className="flex justify-end gap-2">
-                      <button className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-2 text-emerald-400">
+                      <button className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-2 text-emerald-400 cursor-pointer">
                         <Check className="size-4" />
                       </button>
-                      <button className="rounded-lg border border-red-500/30 bg-red-500/10 p-2 text-red-400">
+                      <button className="rounded-lg border border-red-500/30 bg-red-500/10 p-2 text-red-400 cursor-pointer">
                         <Xmark className="size-4" />
                       </button>
                     </div>
