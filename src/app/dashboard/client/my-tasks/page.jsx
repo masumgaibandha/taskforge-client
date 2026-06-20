@@ -12,6 +12,14 @@ const MyTasksPage = async () => {
     return "bg-slate-500/10 text-slate-300";
   };
 
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   return (
     <div>
       <Link
@@ -83,7 +91,9 @@ const MyTasksPage = async () => {
 
                   <div>
                     <p className="text-slate-500">Deadline</p>
-                    <p className="mt-1 text-slate-300">{task.deadline}</p>
+                    <p className="mt-1 whitespace-nowrap text-slate-300">
+                      {formatDate(task.deadline)}
+                    </p>
                   </div>
 
                   <div>
@@ -113,7 +123,7 @@ const MyTasksPage = async () => {
 
           <div className="hidden overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 lg:block">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[850px] text-left">
+              <table className="w-full min-w-212.5 text-left">
                 <thead className="border-b border-slate-800 bg-slate-950/60">
                   <tr>
                     <th className="px-6 py-4 text-sm font-semibold text-slate-300">
@@ -125,7 +135,7 @@ const MyTasksPage = async () => {
                     <th className="px-6 py-4 text-sm font-semibold text-slate-300">
                       Budget
                     </th>
-                    <th className="px-6 py-4 text-sm font-semibold text-slate-300">
+                    <th className="w-40 px-6 py-4 text-sm font-semibold text-slate-300">
                       Deadline
                     </th>
                     <th className="px-6 py-4 text-sm font-semibold text-slate-300">
@@ -158,8 +168,8 @@ const MyTasksPage = async () => {
                         ${task.budget}
                       </td>
 
-                      <td className="px-6 py-5 text-slate-400">
-                        {task.deadline}
+                      <td className="px-6 py-5 whitespace-nowrap text-slate-400">
+                        {formatDate(task.deadline)}
                       </td>
 
                       <td className="px-6 py-5 text-slate-400">

@@ -14,7 +14,7 @@ const DashboardSidebar = () => {
     { icon: Plus, href: "/dashboard/client/post-task", label: "Post Task" },
     { icon: Briefcase, href: "/dashboard/client/my-tasks", label: "My Tasks" },
     { icon: CircleCheck, href: "/dashboard/client/proposals", label: "Proposals" },
-    { icon: Person, href: "/profile", label: "Profile" },
+    { icon: Person, href: "/dashboard/client/profile", label: "Profile" },
   ];
 
   const navContent = (
