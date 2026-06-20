@@ -1,25 +1,10 @@
+import { getProposals } from "@/lib/api/proposals";
 import { ArrowLeft, Check, Xmark } from "@gravity-ui/icons";
 import Link from "next/link";
 
-const ProposalsPage = () => {
-  const proposals = [
-    {
-      id: 1,
-      freelancer: "John Smith",
-      task: "Build a responsive landing page",
-      amount: 120,
-      delivery: "5 Days",
-      status: "Pending",
-    },
-    {
-      id: 2,
-      freelancer: "Emily Carter",
-      task: "Design a modern logo",
-      amount: 75,
-      delivery: "3 Days",
-      status: "Pending",
-    },
-  ];
+const ProposalsPage = async () => {
+  const proposals = await getProposals();
+  
 
   return (
     <div>
@@ -44,15 +29,15 @@ const ProposalsPage = () => {
       <div className="grid gap-5 lg:hidden">
         {proposals.map((proposal) => (
           <div
-            key={proposal.id}
+            key={proposal._id}
             className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h2 className="font-semibold text-white">
-                  {proposal.freelancer}
+                  {proposal.freelancerName}
                 </h2>
-                <p className="mt-1 text-sm text-slate-400">{proposal.task}</p>
+                <p className="mt-1 text-sm text-slate-400">{proposal.taskTitle}</p>
               </div>
 
               <span className="rounded-full bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-300">
@@ -64,13 +49,13 @@ const ProposalsPage = () => {
               <div>
                 <p className="text-slate-500">Bid</p>
                 <p className="mt-1 font-semibold text-cyan-400">
-                  ${proposal.amount}
+                  ${proposal.bidAmount}
                 </p>
               </div>
 
               <div>
                 <p className="text-slate-500">Delivery</p>
-                <p className="mt-1 text-slate-300">{proposal.delivery}</p>
+                <p className="mt-1 text-slate-300">{proposal.deliveryTime}</p>
               </div>
             </div>
 
@@ -106,7 +91,7 @@ const ProposalsPage = () => {
             <tbody>
               {proposals.map((proposal) => (
                 <tr
-                  key={proposal.id}
+                  key={proposal._id}
                   className="border-b border-slate-800/70 transition hover:bg-slate-800/40"
                 >
                   <td className="px-6 py-5 text-white">
