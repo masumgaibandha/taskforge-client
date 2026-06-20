@@ -12,3 +12,16 @@ export const getProposals = async (clientEmail) => {
 
   return res.json();
 };
+
+export const getFreelancerProposals = async (freelancerEmail) => {
+  const res = await fetch(
+    `${baseUrl}/api/proposals?freelancerEmail=${freelancerEmail}`,
+    {
+      cache: "no-store",
+    },
+  );
+
+  if (!res.ok) return [];
+
+  return res.json();
+};

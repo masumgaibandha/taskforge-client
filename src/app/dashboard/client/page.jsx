@@ -1,23 +1,37 @@
-"use client";
-
-import { useSession } from "@/lib/auth-client";
+import { getClientTasks } from "@/lib/api/tasks";
+import { getProposals } from "@/lib/api/proposals";
+import { auth } from "@/lib/auth";
 import { Briefcase, CircleCheck, Clock, CreditCard } from "@gravity-ui/icons";
 import Link from "next/link";
+import { headers } from "next/headers";
 
-const ClientDashboard = () => {
-  const { data: session, isPending } = useSession();
-
-  if (isPending) {
-    return <p>Loading...</p>;
-  }
+const ClientDashboard = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   const user = session?.user;
 
+  const tasks = await getClientTasks(user?.email);
+  const proposals = await getProposals(user?.email);
+
   const stats = [
-    { title: "Total Tasks", value: "12", icon: Briefcase },
-    { title: "Open Tasks", value: "6", icon: Clock },
-    { title: "Completed", value: "4", icon: CircleCheck },
-    { title: "Total Spent", value: "$1,240", icon: CreditCard },
+    { title: "Total Tasks", value: tasks.length, icon: Briefcase },
+    {
+      title: "Open Tasks",
+      value: tasks.filter((task) => task.status === "open").length,
+      icon: Clock,
+    },
+    {
+      title: "In Progress",
+      value: tasks.filter((task) => task.status === "in-progress").length,
+      icon: CircleCheck,
+    },
+    {
+      title: "Proposals",
+      value: proposals.length,
+      icon: CreditCard,
+    },
   ];
 
   return (
@@ -26,11 +40,11 @@ const ClientDashboard = () => {
         <p className="text-sm font-semibold text-cyan-400">Client Dashboard</p>
 
         <h1 className="mt-2 text-3xl font-bold text-white">
-          Welcome back, {user?.name || "Client"} 👋
+          Welcome back, {user?.name || "Client"}
         </h1>
 
         <p className="mt-3 text-slate-400">
-          Manage your tasks, proposals, payments, and project activity.
+          Manage your tasks, proposals, and project activity.
         </p>
       </div>
 
@@ -55,11 +69,9 @@ const ClientDashboard = () => {
           className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition hover:border-cyan-500/50"
         >
           <h3 className="text-xl font-semibold text-white">Post a Task</h3>
-
           <p className="mt-3 text-sm text-slate-400">
             Create a new task and receive freelancer proposals.
           </p>
-
           <p className="mt-5 font-semibold text-cyan-400">Open →</p>
         </Link>
 
@@ -68,11 +80,9 @@ const ClientDashboard = () => {
           className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition hover:border-cyan-500/50"
         >
           <h3 className="text-xl font-semibold text-white">My Tasks</h3>
-
           <p className="mt-3 text-sm text-slate-400">
             View, edit, and manage all posted tasks.
           </p>
-
           <p className="mt-5 font-semibold text-cyan-400">Open →</p>
         </Link>
 
@@ -81,11 +91,9 @@ const ClientDashboard = () => {
           className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition hover:border-cyan-500/50"
         >
           <h3 className="text-xl font-semibold text-white">Proposals</h3>
-
           <p className="mt-3 text-sm text-slate-400">
             Review freelancer proposals and hire talent.
           </p>
-
           <p className="mt-5 font-semibold text-cyan-400">Open →</p>
         </Link>
       </div>

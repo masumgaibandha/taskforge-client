@@ -1,21 +1,23 @@
 "use server";
 
-import { serverMutation } from "../core/server";
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export const createTask = async (newTaskData) => {
-  return await serverMutation("/api/tasks", newTaskData);
-}
+  const res = await fetch(`${baseUrl}/api/tasks`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newTaskData),
+  });
 
-// const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  return res.json();
+};
 
-// export const createTask = async (newTaskData) => {
-//   const res = await fetch(`${baseUrl}/api/tasks`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(newTaskData),
-//   });
+export const deleteTask = async (taskId) => {
+  const res = await fetch(`${baseUrl}/api/tasks/${taskId}`, {
+    method: "DELETE",
+  });
 
-//   return res.json();
-// };
+  return res.json();
+};

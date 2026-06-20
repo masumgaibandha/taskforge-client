@@ -1,6 +1,7 @@
 import { getClientTasks } from "@/lib/api/tasks";
 import { ArrowLeft, Eye, Pencil, TrashBin } from "@gravity-ui/icons";
 import Link from "next/link";
+import DeleteTaskButton from "./DeleteTaskButton";
 
 const MyTasksPage = async () => {
   const tasks = await getClientTasks();
@@ -113,9 +114,7 @@ const MyTasksPage = async () => {
                     <Pencil className="mx-auto size-4" />
                   </button>
 
-                  <button className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-red-400">
-                    <TrashBin className="mx-auto size-4" />
-                  </button>
+                  <DeleteTaskButton taskId={task._id} />
                 </div>
               </div>
             ))}
@@ -196,9 +195,7 @@ const MyTasksPage = async () => {
                             <Pencil className="size-4" />
                           </button>
 
-                          <button className="rounded-lg border border-slate-700 p-2 text-red-400">
-                            <TrashBin className="size-4" />
-                          </button>
+                          <DeleteTaskButton taskId={task._id} />
                         </div>
                       </td>
                     </tr>
