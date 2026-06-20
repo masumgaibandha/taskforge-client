@@ -106,9 +106,12 @@ const MyTasksPage = async () => {
                 </div>
 
                 <div className="mt-5 flex gap-2">
-                  <button className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-slate-300">
+                  <Link
+                    href={`/tasks/${task._id}`}
+                    className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-center text-slate-300"
+                  >
                     <Eye className="mx-auto size-4" />
-                  </button>
+                  </Link>
 
                   <Link
                     href={`/dashboard/client/my-tasks/${task._id}`}
@@ -190,9 +193,12 @@ const MyTasksPage = async () => {
 
                       <td className="px-6 py-5">
                         <div className="flex justify-end gap-2">
-                          <button className="rounded-lg border border-slate-700 p-2 text-slate-300">
+                          <Link
+                            href={`/tasks/${task._id}`}
+                            className="rounded-lg border border-slate-700 p-2 text-slate-300"
+                          >
                             <Eye className="size-4" />
-                          </button>
+                          </Link>
 
                           <Link
                             href={`/dashboard/client/my-tasks/${task._id}`}

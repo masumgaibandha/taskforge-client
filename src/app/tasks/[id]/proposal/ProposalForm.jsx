@@ -54,7 +54,7 @@ const ProposalForm = ({ task }) => {
         formRef.current?.reset();
         router.push("/tasks");
       } else {
-        toast.error("Failed to submit proposal.");
+        toast.error(res.message || "Failed to submit proposal.");
       }
     } catch (error) {
       console.error(error);

@@ -47,7 +47,15 @@ const LoginPage = () => {
         id: toastId,
       });
 
-      router.replace("/");
+      const role = res?.data?.user?.role;
+
+      if (role === "client") {
+        router.replace("/dashboard/client");
+      } else if (role === "freelancer") {
+        router.replace("/dashboard/freelancer");
+      } else {
+        router.replace("/");
+      }
     } catch (error) {
       toast.error(error?.message || "Something went wrong", {
         id: toastId,
@@ -91,10 +99,7 @@ const LoginPage = () => {
               }}
             >
               <Label className="text-slate-200">Email Address</Label>
-              <Input
-                placeholder="john@example.com"
-                className="text-slate-60"
-              />
+              <Input placeholder="john@example.com" className="text-slate-60" />
               <FieldError className="text-red-400" />
             </TextField>
 
