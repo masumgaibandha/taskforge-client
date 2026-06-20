@@ -110,9 +110,12 @@ const MyTasksPage = async () => {
                     <Eye className="mx-auto size-4" />
                   </button>
 
-                  <button className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-slate-300">
+                  <Link
+                    href={`/dashboard/client/my-tasks/${task._id}`}
+                    className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-center text-slate-300"
+                  >
                     <Pencil className="mx-auto size-4" />
-                  </button>
+                  </Link>
 
                   <DeleteTaskButton taskId={task._id} />
                 </div>
@@ -191,9 +194,12 @@ const MyTasksPage = async () => {
                             <Eye className="size-4" />
                           </button>
 
-                          <button className="rounded-lg border border-slate-700 p-2 text-slate-300">
+                          <Link
+                            href={`/dashboard/client/my-tasks/${task._id}`}
+                            className="rounded-lg border border-slate-700 p-2 text-slate-300"
+                          >
                             <Pencil className="size-4" />
-                          </button>
+                          </Link>
 
                           <DeleteTaskButton taskId={task._id} />
                         </div>

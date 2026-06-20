@@ -21,3 +21,15 @@ export const deleteTask = async (taskId) => {
 
   return res.json();
 };
+
+export const updateTask = async (taskId, updatedTaskData) => {
+  const res = await fetch(`${baseUrl}/api/tasks/${taskId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updatedTaskData),
+  });
+
+  return res.json();
+};
