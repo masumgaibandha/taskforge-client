@@ -1,8 +1,9 @@
 import { getProposals } from "@/lib/api/proposals";
-import { ArrowLeft, Check, Xmark } from "@gravity-ui/icons";
+import { ArrowLeft } from "@gravity-ui/icons";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import ProposalActions from "./ProposalActions";
 
 const ProposalsPage = async () => {
   const session = await auth.api.getSession({
@@ -66,13 +67,11 @@ const ProposalsPage = async () => {
             </div>
 
             <div className="mt-5 grid grid-cols-2 gap-2">
-              <button className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-emerald-400">
-                <Check className="mx-auto size-4" />
-              </button>
-
-              <button className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-red-400">
-                <Xmark className="mx-auto size-4" />
-              </button>
+              <ProposalActions
+                proposalId={proposal._id}
+                taskId={proposal.taskId}
+                status={proposal.status}
+              />
             </div>
           </div>
         ))}
@@ -80,7 +79,7 @@ const ProposalsPage = async () => {
 
       <div className="hidden overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 lg:block">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[900px]">
+          <table className="w-full min-w-225">
             <thead className="border-b border-slate-800 bg-slate-950/60">
               <tr>
                 <th className="px-6 py-4 text-left text-slate-300">
@@ -119,12 +118,11 @@ const ProposalsPage = async () => {
                   </td>
                   <td className="px-6 py-5">
                     <div className="flex justify-end gap-2">
-                      <button className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-2 text-emerald-400 cursor-pointer">
-                        <Check className="size-4" />
-                      </button>
-                      <button className="rounded-lg border border-red-500/30 bg-red-500/10 p-2 text-red-400 cursor-pointer">
-                        <Xmark className="size-4" />
-                      </button>
+                      <ProposalActions
+                        proposalId={proposal._id}
+                        taskId={proposal.taskId}
+                        status={proposal.status}
+                      />
                     </div>
                   </td>
                 </tr>
