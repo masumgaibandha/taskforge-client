@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import {
   Briefcase,
+  CreditCard,
   FileText,
   House,
   LayoutSideContentLeft,
@@ -25,6 +26,7 @@ const DashboardSidebar = async () => {
     { icon: Briefcase, href: "/dashboard/client/my-tasks", label: "My Tasks" },
     { icon: FileText, href: "/dashboard/client/proposals", label: "Proposals" },
     { icon: Person, href: "/dashboard/client/profile", label: "Profile" },
+    { icon: CreditCard, href: "/dashboard/client/payments", label: "Payments" },
   ];
 
   const freelancerNavLinks = [

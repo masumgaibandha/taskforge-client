@@ -1,5 +1,6 @@
 "use client";
 
+import { signIn, useSession } from "@/lib/auth-client";
 import { Check } from "@gravity-ui/icons";
 import {
   Button,
@@ -10,16 +11,28 @@ import {
   Label,
   TextField,
 } from "@heroui/react";
-import { signIn } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 
 const LoginPage = () => {
   const router = useRouter();
+  const { data: session, isPending } = useSession();
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (isPending) return;
+
+    if (session?.user?.role === "client") {
+      router.replace("/dashboard/client");
+    } else if (session?.user?.role === "freelancer") {
+      router.replace("/dashboard/freelancer");
+    } else if (session?.user?.role === "admin") {
+      router.replace("/dashboard/admin");
+    }
+  }, [session, isPending, router]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -47,15 +60,8 @@ const LoginPage = () => {
         id: toastId,
       });
 
-      const role = res?.data?.user?.role;
-
-      if (role === "client") {
-        router.replace("/dashboard/client");
-      } else if (role === "freelancer") {
-        router.replace("/dashboard/freelancer");
-      } else {
-        router.replace("/");
-      }
+      router.replace("/dashboard");
+      router.refresh();
     } catch (error) {
       toast.error(error?.message || "Something went wrong", {
         id: toastId,
@@ -99,7 +105,10 @@ const LoginPage = () => {
               }}
             >
               <Label className="text-slate-200">Email Address</Label>
-              <Input placeholder="john@example.com" className="text-slate-60" />
+              <Input
+                placeholder="john@example.com"
+                className="text-slate-600"
+              />
               <FieldError className="text-red-400" />
             </TextField>
 
@@ -107,7 +116,7 @@ const LoginPage = () => {
               <Label className="text-slate-200">Password</Label>
               <Input
                 placeholder="Enter your password"
-                className="text-slate-60"
+                className="text-slate-600"
               />
               <Description className="text-slate-500">
                 Enter the password you used when creating your account.
@@ -117,7 +126,7 @@ const LoginPage = () => {
 
             <Button
               type="submit"
-              isDisabled={isLoading}
+              isDisabled={isLoading || isPending}
               className="mt-2 w-full bg-cyan-500 font-semibold text-white shadow-lg shadow-cyan-500/20"
             >
               <Check />

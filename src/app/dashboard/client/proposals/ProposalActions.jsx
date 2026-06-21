@@ -1,22 +1,29 @@
 "use client";
 
+import { createCheckoutSession } from "@/lib/actions/payments";
 import { updateProposalStatus } from "@/lib/actions/proposals";
-import { Check, Xmark } from "@gravity-ui/icons";
-import { useRouter } from "next/navigation";
+import { CreditCard, Xmark } from "@gravity-ui/icons";
 import toast from "react-hot-toast";
 
-const ProposalActions = ({ proposalId, taskId, status }) => {
-    console.log("taskId:", taskId);
-  const router = useRouter();
+const ProposalActions = ({ proposalId, status }) => {
+  const handlePayment = async () => {
+    const res = await createCheckoutSession(proposalId);
 
-  const handleStatusUpdate = async (status) => {
-    const res = await updateProposalStatus(proposalId, status, taskId);
+    if (res.url) {
+      window.location.href = res.url;
+    } else {
+      toast.error(res.message || "Failed to start payment.");
+    }
+  };
+
+  const handleReject = async () => {
+    const res = await updateProposalStatus(proposalId, "rejected");
 
     if (res.modifiedCount > 0) {
-      toast.success(`Proposal ${status}`);
-      router.refresh();
+      toast.success("Proposal rejected");
+      window.location.reload();
     } else {
-      toast.error("Failed to update proposal.");
+      toast.error("Failed to reject proposal.");
     }
   };
 
@@ -24,16 +31,18 @@ const ProposalActions = ({ proposalId, taskId, status }) => {
     <div className="flex justify-end gap-2">
       <button
         disabled={status !== "pending"}
-        onClick={() => handleStatusUpdate("accepted")}
+        onClick={handlePayment}
         className="cursor-pointer rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-2 text-emerald-400 disabled:cursor-not-allowed disabled:opacity-40"
+        title="Pay with Stripe"
       >
-        <Check className="size-4" />
+        <CreditCard className="size-4" />
       </button>
 
       <button
         disabled={status !== "pending"}
-        onClick={() => handleStatusUpdate("rejected")}
+        onClick={handleReject}
         className="cursor-pointer rounded-lg border border-red-500/30 bg-red-500/10 p-2 text-red-400 disabled:cursor-not-allowed disabled:opacity-40"
+        title="Reject proposal"
       >
         <Xmark className="size-4" />
       </button>
