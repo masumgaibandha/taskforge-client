@@ -1,6 +1,6 @@
 "use client";
 
-import { signOut, signUp } from "@/lib/auth-client";
+import { signIn, signOut, signUp } from "@/lib/auth-client";
 import { Check } from "@gravity-ui/icons";
 import {
   Button,
@@ -65,6 +65,12 @@ const RegisterPage = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+  const handleGoogleLogin = async () => {
+    await signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+    });
   };
 
   return (
@@ -198,6 +204,7 @@ const RegisterPage = () => {
             <Button
               type="button"
               variant="bordered"
+              onPress={handleGoogleLogin}
               className="w-full border-slate-700 font-medium text-slate-200"
             >
               <FcGoogle className="text-xl" />

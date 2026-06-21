@@ -71,6 +71,13 @@ const LoginPage = () => {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    await signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+    });
+  };
+
   return (
     <section className="relative overflow-hidden bg-slate-950 py-20">
       <div className="absolute left-1/2 top-10 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-500/20 blur-3xl" />
@@ -136,6 +143,7 @@ const LoginPage = () => {
             <Button
               type="button"
               variant="bordered"
+              onPress={handleGoogleLogin}
               className="w-full border-slate-700 font-medium text-slate-200"
             >
               <FcGoogle className="text-xl" />
