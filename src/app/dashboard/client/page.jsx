@@ -5,6 +5,7 @@ import { Briefcase, CircleCheck, Clock, CreditCard } from "@gravity-ui/icons";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getClientPayments } from "@/lib/api/payments";
 
 const ClientDashboard = async () => {
   const session = await auth.api.getSession({
@@ -18,6 +19,12 @@ const ClientDashboard = async () => {
 
   const tasks = await getClientTasks(user?.email);
   const proposals = await getProposals(user?.email);
+  const payments = await getClientPayments(user?.email);
+
+  const totalSpent = payments.reduce(
+    (total, payment) => total + Number(payment.amount || 0),
+    0,
+  );
 
   const stats = [
     { title: "Total Tasks", value: tasks.length, icon: Briefcase },
@@ -32,8 +39,8 @@ const ClientDashboard = async () => {
       icon: CircleCheck,
     },
     {
-      title: "Proposals",
-      value: proposals.length,
+      title: "Total Spent",
+      value: `$${totalSpent}`,
       icon: CreditCard,
     },
   ];
@@ -67,7 +74,7 @@ const ClientDashboard = async () => {
         ))}
       </div>
 
-      <div className="mt-8 grid gap-5 md:grid-cols-3">
+      <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         <Link
           href="/dashboard/client/post-task"
           className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition hover:border-cyan-500/50"
@@ -97,6 +104,16 @@ const ClientDashboard = async () => {
           <h3 className="text-xl font-semibold text-white">Proposals</h3>
           <p className="mt-3 text-sm text-slate-400">
             Review freelancer proposals and hire talent.
+          </p>
+          <p className="mt-5 font-semibold text-cyan-400">Open →</p>
+        </Link>
+        <Link
+          href="/dashboard/client/payments"
+          className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition hover:border-cyan-500/50"
+        >
+          <h3 className="text-xl font-semibold text-white">Payments</h3>
+          <p className="mt-3 text-sm text-slate-400">
+            View your Stripe payment history.
           </p>
           <p className="mt-5 font-semibold text-cyan-400">Open →</p>
         </Link>
