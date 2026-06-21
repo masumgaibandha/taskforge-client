@@ -1,20 +1,26 @@
-const PlatformStats = () => {
+import { getClientTasks } from "@/lib/api/tasks";
+import { getFreelancers } from "@/lib/api/freelancers";
+
+const PlatformStats = async () => {
+  const tasks = await getClientTasks();
+  const freelancers = await getFreelancers();
+
   const stats = [
     {
-      value: "2,500+",
+      value: tasks.length,
       label: "Tasks Posted",
     },
     {
-      value: "1,200+",
+      value: freelancers.length,
       label: "Freelancers",
     },
     {
-      value: "$85K+",
-      label: "Total Payout",
+      value: "Stripe",
+      label: "Secure Payments",
     },
     {
-      value: "98%",
-      label: "Success Rate",
+      value: "24/7",
+      label: "Platform Access",
     },
   ];
 
@@ -25,8 +31,9 @@ const PlatformStats = () => {
           <p className="mb-2 text-sm font-semibold text-cyan-400">
             Platform Growth
           </p>
+
           <h2 className="text-3xl font-bold text-white">
-            Trusted By Thousands
+            Trusted By Freelancers & Clients
           </h2>
         </div>
 

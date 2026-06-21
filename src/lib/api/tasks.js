@@ -1,8 +1,20 @@
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-export const getClientTasks = async (clientEmail) => {
-  const url = clientEmail
-    ? `${baseUrl}/api/tasks?clientEmail=${clientEmail}`
+export const getClientTasks = async (
+  clientEmail,
+  search = "",
+  category = "",
+) => {
+  const params = new URLSearchParams();
+
+  if (clientEmail) params.append("clientEmail", clientEmail);
+  if (search) params.append("search", search);
+  if (category && category !== "All Categories") {
+    params.append("category", category);
+  }
+
+  const url = params.toString()
+    ? `${baseUrl}/api/tasks?${params.toString()}`
     : `${baseUrl}/api/tasks`;
 
   const res = await fetch(url, {

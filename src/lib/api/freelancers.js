@@ -5,7 +5,5 @@ export const getFreelancers = async () => {
     cache: "no-store",
   });
 
-  if (!res.ok) return [];
-
   return res.json();
 };

@@ -1,8 +1,13 @@
 import { getClientTasks } from "@/lib/api/tasks";
 import Link from "next/link";
 
-const TasksPage = async () => {
-  const tasks = await getClientTasks();
+const TasksPage = async ({ searchParams }) => {
+  const params = await searchParams;
+
+  const search = params?.search || "";
+  const category = params?.category || "";
+
+  const tasks = await getClientTasks(null, search, category);
 
   return (
     <section className="min-h-screen bg-slate-950 py-16 text-white">
@@ -20,32 +25,58 @@ const TasksPage = async () => {
           </p>
         </div>
 
-        <div className="mb-8 grid gap-4 rounded-2xl border border-slate-800 bg-slate-900/50 p-5 md:grid-cols-3">
+        <form
+          action="/tasks"
+          className="mb-8 grid gap-4 rounded-2xl border border-slate-800 bg-slate-900/50 p-5 md:grid-cols-3"
+        >
           <input
+            name="search"
             type="text"
+            defaultValue={search}
             placeholder="Search tasks..."
-            className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-300 outline-none"
+            className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-300 outline-none focus:border-cyan-500"
           />
 
-          <select className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-300 outline-none">
-            <option>All Categories</option>
-            <option>Design</option>
-            <option>Writing</option>
-            <option>Development</option>
-            <option>Marketing</option>
-            <option>Other</option>
+          <select
+            name="category"
+            defaultValue={category}
+            className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-300 outline-none focus:border-cyan-500"
+          >
+            <option value="">All Categories</option>
+            <option value="Design">Design</option>
+            <option value="Writing">Writing</option>
+            <option value="Development">Development</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Other">Other</option>
           </select>
 
           <button className="rounded-xl bg-cyan-500 px-4 py-3 font-semibold text-white">
             Search
           </button>
-        </div>
+        </form>
+
+        {(search || category) && (
+          <div className="mb-6 flex flex-wrap items-center gap-3">
+            <p className="text-sm text-slate-400">
+              Showing results
+              {search ? ` for "${search}"` : ""}
+              {category ? ` in ${category}` : ""}
+            </p>
+
+            <Link
+              href="/tasks"
+              className="rounded-full border border-slate-700 px-4 py-1.5 text-sm text-slate-300 hover:border-cyan-500 hover:text-cyan-400"
+            >
+              Clear filters
+            </Link>
+          </div>
+        )}
 
         {tasks.length === 0 ? (
           <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-8 text-center">
             <h2 className="text-xl font-semibold text-white">No tasks found</h2>
             <p className="mt-2 text-slate-400">
-              There are no open tasks available right now.
+              Try changing your search or category filter.
             </p>
           </div>
         ) : (
@@ -59,7 +90,7 @@ const TasksPage = async () => {
                   {task.category}
                 </span>
 
-                <h2 className="mt-4 text-xl font-semibold text-white">
+                <h2 className="mt-4 line-clamp-2 text-xl font-semibold text-white">
                   {task.title}
                 </h2>
 

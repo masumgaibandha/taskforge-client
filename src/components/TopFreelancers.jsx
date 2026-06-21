@@ -1,69 +1,69 @@
-const freelancers = [
-  {
-    name: "John Smith",
-    image: "https://i.pravatar.cc/150?img=1",
-    skills: ["React", "Next.js"],
-    rating: 4.9,
-    jobs: 48,
-  },
-  {
-    name: "Emily Carter",
-    image: "https://i.pravatar.cc/150?img=5",
-    skills: ["UI/UX", "Figma"],
-    rating: 4.8,
-    jobs: 35,
-  },
-  {
-    name: "Michael Chen",
-    image: "https://i.pravatar.cc/150?img=8",
-    skills: ["Node.js", "MongoDB"],
-    rating: 5.0,
-    jobs: 52,
-  },
-];
+import { getFreelancers } from "@/lib/api/freelancers";
+import Image from "next/image";
+import Link from "next/link";
 
-const TopFreelancers = () => {
+const TopFreelancers = async () => {
+  const freelancers = await getFreelancers();
+
+  const topFreelancers = freelancers.slice(0, 6);
+
   return (
     <section className="bg-slate-900 py-20">
       <div className="container mx-auto px-4">
         <div className="mb-10 text-center">
           <p className="mb-2 text-sm font-semibold text-cyan-400">Top Talent</p>
+
           <h2 className="text-3xl font-bold text-white">Top Freelancers</h2>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          {freelancers.map((freelancer) => (
-            <div
-              key={freelancer.name}
-              className="rounded-2xl border border-slate-800 bg-slate-950 p-6 text-center"
-            >
-              <img
-                src={freelancer.image}
-                alt={freelancer.name}
-                className="mx-auto h-24 w-24 rounded-full object-cover"
-              />
+        {topFreelancers.length === 0 ? (
+          <div className="rounded-3xl border border-slate-800 bg-slate-950 p-8 text-center">
+            <h3 className="text-xl font-semibold text-white">
+              No freelancers found
+            </h3>
 
-              <h3 className="mt-4 text-xl font-semibold text-white">
-                {freelancer.name}
-              </h3>
+            <p className="mt-2 text-slate-400">Freelancers will appear here.</p>
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-3">
+            {topFreelancers.map((freelancer) => (
+              <Link
+                key={freelancer._id}
+                href="/freelancers"
+                className="rounded-2xl border border-slate-800 bg-slate-950 p-6 text-center transition hover:border-cyan-500/50"
+              >
+                <Image
+                  src={
+                    freelancer.image ||
+                    "https://i.ibb.co/dSjqkQR/568-camedia.png"
+                  }
+                  alt={freelancer.name || "Freelancer"}
+                  width={200}
+                  height={200}
+                  className="mx-auto h-24 w-24 rounded-full border-2 border-cyan-500/40 object-cover"
+                />
 
-              <div className="mt-3 flex flex-wrap justify-center gap-2">
-                {freelancer.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="rounded-full bg-cyan-500/10 px-3 py-1 text-xs text-cyan-300"
-                  >
-                    {skill}
+                <h3 className="mt-4 text-xl font-semibold text-white">
+                  {freelancer.name}
+                </h3>
+
+                <p className="mt-2 text-sm text-slate-400">
+                  {freelancer.location || "Remote Freelancer"}
+                </p>
+
+                <div className="mt-4">
+                  <span className="rounded-full bg-cyan-500/10 px-3 py-1 text-xs text-cyan-300">
+                    {freelancer.role}
                   </span>
-                ))}
-              </div>
+                </div>
 
-              <p className="mt-4 text-slate-400">
-                ⭐ {freelancer.rating} · {freelancer.jobs} jobs completed
-              </p>
-            </div>
-          ))}
-        </div>
+                <p className="mt-4 text-slate-400">
+                  {freelancer.location || "Remote"}
+                </p>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
