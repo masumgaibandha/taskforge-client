@@ -45,7 +45,26 @@ const DashboardSidebar = async () => {
     { icon: Person, href: "/dashboard/freelancer/profile", label: "Profile" },
   ];
 
-  const navItems = role === "freelancer" ? freelancerNavLinks : clientNavLinks;
+  const adminNavLinks = [
+    { icon: House, href: "/dashboard/admin", label: "Overview" },
+    { icon: Person, href: "/dashboard/admin/users", label: "Users" },
+    { icon: Briefcase, href: "/dashboard/admin/tasks", label: "Tasks" },
+    {
+      icon: CreditCard,
+      href: "/dashboard/admin/transactions",
+      label: "Transactions",
+    },
+  ];
+
+  let navItems = clientNavLinks;
+
+  if (role === "freelancer") {
+    navItems = freelancerNavLinks;
+  }
+
+  if (role === "admin") {
+    navItems = adminNavLinks;
+  }
 
   const navContent = (
     <div className="flex h-full flex-col">
