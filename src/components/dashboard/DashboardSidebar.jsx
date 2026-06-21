@@ -25,8 +25,8 @@ const DashboardSidebar = async () => {
     { icon: FileText, href: "/dashboard/client/post-task", label: "Post Task" },
     { icon: Briefcase, href: "/dashboard/client/my-tasks", label: "My Tasks" },
     { icon: FileText, href: "/dashboard/client/proposals", label: "Proposals" },
-    { icon: Person, href: "/dashboard/client/profile", label: "Profile" },
     { icon: CreditCard, href: "/dashboard/client/payments", label: "Payments" },
+    { icon: Person, href: "/dashboard/client/profile", label: "Profile" },
   ];
 
   const freelancerNavLinks = [
@@ -36,6 +36,11 @@ const DashboardSidebar = async () => {
       icon: Briefcase,
       href: "/dashboard/freelancer/my-proposals",
       label: "My Proposals",
+    },
+    {
+      icon: CreditCard,
+      href: "/dashboard/freelancer/earnings",
+      label: "Earnings",
     },
     { icon: Person, href: "/dashboard/freelancer/profile", label: "Profile" },
   ];
