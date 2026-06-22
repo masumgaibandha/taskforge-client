@@ -38,6 +38,12 @@ const DashboardSidebar = async () => {
       label: "My Proposals",
     },
     {
+      
+      icon: Briefcase,
+      href: "/dashboard/freelancer/active-projects",
+      label: "Active Projects",
+    },
+    {
       icon: CreditCard,
       href: "/dashboard/freelancer/earnings",
       label: "Earnings",
