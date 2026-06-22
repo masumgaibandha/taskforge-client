@@ -38,7 +38,6 @@ const DashboardSidebar = async () => {
       label: "My Proposals",
     },
     {
-      
       icon: Briefcase,
       href: "/dashboard/freelancer/active-projects",
       label: "Active Projects",
@@ -105,7 +104,7 @@ const DashboardSidebar = async () => {
       </aside>
 
       <Drawer>
-        <Button className="mb-5 bg-slate-800 text-white lg:hidden">
+        <Button className="mb-5 w-fit bg-slate-800 text-white lg:hidden">
           <LayoutSideContentLeft />
           Sidebar
         </Button>

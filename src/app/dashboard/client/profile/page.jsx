@@ -31,7 +31,7 @@ const ClientProfile = () => {
       setProfile(data);
 
       setStats([
-        { label: "Total Tasks", value: tasks.length },
+        { label: "Total Tasks", value: taskData?.total || tasks.length },
         {
           label: "Open Tasks",
           value: tasks.filter((task) => task.status === "open").length,
@@ -238,9 +238,9 @@ const ClientProfile = () => {
 
 const ProfileInfo = ({ icon: Icon, text }) => {
   return (
-    <div className="flex items-center gap-3 text-slate-300">
-      <Icon className="h-5 w-5 text-cyan-400" />
-      <span className="text-sm">{text}</span>
+    <div className="flex min-w-0 items-center gap-3 text-slate-300">
+      <Icon className="h-5 w-5 shrink-0 text-cyan-400" />
+      <span className="min-w-0 break-all text-sm">{text}</span>
     </div>
   );
 };
