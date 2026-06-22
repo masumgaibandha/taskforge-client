@@ -34,3 +34,19 @@ export const getTaskById = async (id) => {
 
   return res.json();
 };
+
+export const getFreelancerTasks = async (freelancerEmail, status = "") => {
+  const params = new URLSearchParams();
+
+  if (freelancerEmail) params.append("freelancerEmail", freelancerEmail);
+  if (status) params.append("status", status);
+
+  params.append("page", 1);
+  params.append("limit", 100);
+
+  const res = await fetch(`${baseUrl}/api/tasks?${params.toString()}`, {
+    cache: "no-store",
+  });
+
+  return res.json();
+};

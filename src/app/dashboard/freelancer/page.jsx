@@ -10,12 +10,24 @@ const FreelancerDashboardPage = async () => {
     headers: await headers(),
   });
 
-  if (session?.user?.role !== "freelancer") {
-    redirect("/dashboard/client");
+  const user = session?.user;
+
+  if (!user) {
+    redirect("/login");
   }
 
-  const proposals = await getFreelancerProposals(session?.user?.email);
-  const payments = await getFreelancerPayments(session?.user?.email);
+  if (user.role !== "freelancer") {
+    redirect(
+      user.role === "client"
+        ? "/dashboard/client"
+        : user.role === "admin"
+          ? "/dashboard/admin"
+          : "/",
+    );
+  }
+
+  const proposals = await getFreelancerProposals(user.email);
+  const payments = await getFreelancerPayments(user.email);
 
   const totalEarnings = payments.reduce(
     (total, payment) => total + Number(payment.amount || 0),
@@ -41,34 +53,6 @@ const FreelancerDashboardPage = async () => {
     },
   ];
 
-  <div className="mt-8 grid gap-5 md:grid-cols-2">
-    <Link
-      href="/dashboard/freelancer/proposals"
-      className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition hover:border-cyan-500/50"
-    >
-      <h3 className="text-xl font-semibold text-white">My Proposals</h3>
-
-      <p className="mt-3 text-sm text-slate-400">
-        Track submitted proposals and project status.
-      </p>
-
-      <p className="mt-5 font-semibold text-cyan-400">Open →</p>
-    </Link>
-
-    <Link
-      href="/dashboard/freelancer/earnings"
-      className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition hover:border-cyan-500/50"
-    >
-      <h3 className="text-xl font-semibold text-white">My Earnings</h3>
-
-      <p className="mt-3 text-sm text-slate-400">
-        View payments received from clients.
-      </p>
-
-      <p className="mt-5 font-semibold text-cyan-400">Open →</p>
-    </Link>
-  </div>;
-
   return (
     <div>
       <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
@@ -77,7 +61,7 @@ const FreelancerDashboardPage = async () => {
         </p>
 
         <h1 className="mt-2 text-3xl font-bold text-white">
-          Welcome back, {session?.user?.name || "Freelancer"}
+          Welcome back, {user.name || "Freelancer"}
         </h1>
 
         <p className="mt-2 text-slate-400">
@@ -96,6 +80,34 @@ const FreelancerDashboardPage = async () => {
             <h2 className="mt-2 text-3xl font-bold text-white">{item.value}</h2>
           </div>
         ))}
+      </div>
+
+      <div className="mt-8 grid gap-5 md:grid-cols-2">
+        <Link
+          href="/dashboard/freelancer/proposals"
+          className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition hover:border-cyan-500/50"
+        >
+          <h3 className="text-xl font-semibold text-white">My Proposals</h3>
+
+          <p className="mt-3 text-sm text-slate-400">
+            Track submitted proposals and project status.
+          </p>
+
+          <p className="mt-5 font-semibold text-cyan-400">Open →</p>
+        </Link>
+
+        <Link
+          href="/dashboard/freelancer/earnings"
+          className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 transition hover:border-cyan-500/50"
+        >
+          <h3 className="text-xl font-semibold text-white">My Earnings</h3>
+
+          <p className="mt-3 text-sm text-slate-400">
+            View payments received from clients.
+          </p>
+
+          <p className="mt-5 font-semibold text-cyan-400">Open →</p>
+        </Link>
       </div>
     </div>
   );

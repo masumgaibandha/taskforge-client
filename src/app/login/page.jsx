@@ -1,6 +1,6 @@
 "use client";
-
-import { signIn, useSession } from "@/lib/auth-client";
+import { getUserProfile } from "@/lib/api/users";
+import { signIn, signOut, useSession } from "@/lib/auth-client";
 import { Check } from "@gravity-ui/icons";
 import {
   Button,
@@ -53,6 +53,18 @@ const LoginPage = () => {
         toast.error(res.error.message || "Invalid email or password", {
           id: toastId,
         });
+        return;
+      }
+
+      const profile = await getUserProfile(data.email);
+
+      if (profile?.isBlocked) {
+        await signOut();
+
+        toast.error("Your account has been blocked. Please contact support.", {
+          id: toastId,
+        });
+
         return;
       }
 
@@ -133,7 +145,7 @@ const LoginPage = () => {
 
             <Button
               type="submit"
-              isDisabled={isLoading || isPending}
+              isDisabled={isLoading}
               className="mt-2 w-full bg-cyan-500 font-semibold text-white shadow-lg shadow-cyan-500/20"
             >
               <Check />

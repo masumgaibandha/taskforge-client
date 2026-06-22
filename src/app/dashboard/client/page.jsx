@@ -13,8 +13,19 @@ const ClientDashboard = async () => {
   });
 
   const user = session?.user;
-  if (user?.role !== "client") {
-    redirect("/dashboard/freelancer");
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (user.role !== "client") {
+    redirect(
+      user.role === "freelancer"
+        ? "/dashboard/freelancer"
+        : user.role === "admin"
+          ? "/dashboard/admin"
+          : "/",
+    );
   }
 
   const data = await getClientTasks(user?.email);
@@ -28,7 +39,11 @@ const ClientDashboard = async () => {
   );
 
   const stats = [
-    { title: "Total Tasks", value: tasks.length, icon: Briefcase },
+    {
+      title: "Total Tasks",
+      value: data?.total || tasks.length,
+      icon: Briefcase,
+    },
     {
       title: "Open Tasks",
       value: tasks.filter((task) => task.status === "open").length,

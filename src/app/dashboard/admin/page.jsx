@@ -10,8 +10,20 @@ const AdminDashboardPage = async () => {
     headers: await headers(),
   });
 
-  if (session?.user?.role !== "admin") {
-    redirect("/dashboard");
+  const user = session?.user;
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (user.role !== "admin") {
+    redirect(
+      user.role === "client"
+        ? "/dashboard/client"
+        : user.role === "freelancer"
+          ? "/dashboard/freelancer"
+          : "/",
+    );
   }
 
   const stats = await getAdminStats();
