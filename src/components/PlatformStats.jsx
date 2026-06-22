@@ -2,12 +2,14 @@ import { getClientTasks } from "@/lib/api/tasks";
 import { getFreelancers } from "@/lib/api/freelancers";
 
 const PlatformStats = async () => {
-  const tasks = await getClientTasks();
+  const data = await getClientTasks();
+  const tasks = data?.tasks || [];
+
   const freelancers = await getFreelancers();
 
   const stats = [
     {
-      value: tasks.length,
+      value: data?.total || tasks.length,
       label: "Tasks Posted",
     },
     {
@@ -23,7 +25,6 @@ const PlatformStats = async () => {
       label: "Platform Access",
     },
   ];
-
   return (
     <section className="bg-slate-900 py-20">
       <div className="container mx-auto px-4">

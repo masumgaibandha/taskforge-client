@@ -2,9 +2,18 @@ import { getClientTasks } from "@/lib/api/tasks";
 import { ArrowLeft, Eye, Pencil, TrashBin } from "@gravity-ui/icons";
 import Link from "next/link";
 import DeleteTaskButton from "./DeleteTaskButton";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const MyTasksPage = async () => {
-  const tasks = await getClientTasks();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const user = session?.user;
+
+  const data = await getClientTasks(user?.email);
+  const tasks = data?.tasks || [];
 
   const getStatusStyle = (status) => {
     if (status === "open") return "bg-cyan-500/10 text-cyan-300";

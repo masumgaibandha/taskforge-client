@@ -3,11 +3,8 @@ import { Button } from "@heroui/react";
 import Link from "next/link";
 
 const FeaturedTasks = async () => {
-  const tasks = await getClientTasks();
-
-  const featuredTasks = tasks
-    .filter((task) => task.status === "open")
-    .slice(0, 6);
+  const data = await getClientTasks(null, "", "", 1, 6, "open");
+  const featuredTasks = data?.tasks || [];
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString("en-US", {

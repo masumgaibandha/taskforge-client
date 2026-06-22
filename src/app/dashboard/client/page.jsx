@@ -17,7 +17,8 @@ const ClientDashboard = async () => {
     redirect("/dashboard/freelancer");
   }
 
-  const tasks = await getClientTasks(user?.email);
+  const data = await getClientTasks(user?.email);
+  const tasks = data?.tasks || [];
   const proposals = await getProposals(user?.email);
   const payments = await getClientPayments(user?.email);
 

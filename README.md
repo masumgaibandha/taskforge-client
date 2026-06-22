@@ -3,17 +3,12 @@
 TaskForge is a freelance micro-task marketplace where clients can post tasks, freelancers can submit proposals, and projects are completed through a secure hiring and payment workflow. The platform includes role-based dashboards for Clients, Freelancers, and Admins, along with Stripe payment integration and Google authentication.
 
 ## Live Links
-
-### Live Website
-
 https://taskforge-client.vercel.app
 
 ### Client Repository
-
 https://github.com/masumgaibandha/taskforge-client
 
 ### Server Repository
-
 https://github.com/masumgaibandha/taskforge-server
 
 ---
@@ -216,8 +211,16 @@ node index.js
 ## Admin Credentials
 
 ```txt
+Admin Login credential: 
 Email: admin@taskforge.com
 Password: Admin@123
+
+
+Client Login: client@client.com
+Password: Masum@123
+
+Freelancer Login: freelancer@freelancer.com
+Password: Masum@123
 ```
 
 ---

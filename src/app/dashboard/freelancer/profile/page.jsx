@@ -24,7 +24,8 @@ const FreelancerProfile = () => {
       if (!user?.email) return;
 
       const data = await getUserProfile(user.email);
-      const tasks = await getClientTasks(user.email);
+      const taskData = await getClientTasks(user.email);
+      const tasks = taskData?.tasks || [];
       const proposals = await getFreelancerProposals(user.email);
 
       setProfile(data);

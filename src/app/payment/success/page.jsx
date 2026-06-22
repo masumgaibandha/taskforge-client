@@ -15,13 +15,13 @@ const PaymentSuccessPage = async ({ searchParams }) => {
           <h1 className="mt-3 text-4xl font-bold text-white">
             Your payment has been completed
           </h1>
-          <ConfirmPayment sessionId={session_id} />
 
-          <p className="mt-4 text-slate-400">Stripe session ID:</p>
-
-          <p className="mt-2 break-all rounded-xl border border-slate-800 bg-slate-950 p-3 text-sm text-slate-300">
-            {session_id}
+          <p className="mx-auto mt-4 max-w-xl text-slate-400">
+            Your payment has been securely processed and the project has moved
+            to in-progress.
           </p>
+
+          <ConfirmPayment sessionId={session_id} />
 
           <Link
             href="/dashboard/client/proposals"

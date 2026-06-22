@@ -4,6 +4,9 @@ export const getClientTasks = async (
   clientEmail,
   search = "",
   category = "",
+  page = 1,
+  limit = 9,
+  status = "",
 ) => {
   const params = new URLSearchParams();
 
@@ -12,12 +15,12 @@ export const getClientTasks = async (
   if (category && category !== "All Categories") {
     params.append("category", category);
   }
+  if (status) params.append("status", status);
 
-  const url = params.toString()
-    ? `${baseUrl}/api/tasks?${params.toString()}`
-    : `${baseUrl}/api/tasks`;
+  params.append("page", page);
+  params.append("limit", limit);
 
-  const res = await fetch(url, {
+  const res = await fetch(`${baseUrl}/api/tasks?${params.toString()}`, {
     cache: "no-store",
   });
 
