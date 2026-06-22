@@ -1,4 +1,5 @@
 "use client";
+
 import { getUserProfile } from "@/lib/api/users";
 import { signIn, signOut, useSession } from "@/lib/auth-client";
 import { Check } from "@gravity-ui/icons";
@@ -25,11 +26,17 @@ const LoginPage = () => {
   useEffect(() => {
     if (isPending) return;
 
-    if (session?.user?.role === "client") {
+    const role = session?.user?.role;
+
+    if (role === "client") {
       router.replace("/dashboard/client");
-    } else if (session?.user?.role === "freelancer") {
+    }
+
+    if (role === "freelancer") {
       router.replace("/dashboard/freelancer");
-    } else if (session?.user?.role === "admin") {
+    }
+
+    if (role === "admin") {
       router.replace("/dashboard/admin");
     }
   }, [session, isPending, router]);
@@ -72,8 +79,14 @@ const LoginPage = () => {
         id: toastId,
       });
 
-      router.replace("/dashboard");
-      router.refresh();
+      const dashboardPath =
+        profile?.role === "admin"
+          ? "/dashboard/admin"
+          : profile?.role === "freelancer"
+            ? "/dashboard/freelancer"
+            : "/dashboard/client";
+
+      window.location.href = dashboardPath;
     } catch (error) {
       toast.error(error?.message || "Something went wrong", {
         id: toastId,
@@ -86,7 +99,7 @@ const LoginPage = () => {
   const handleGoogleLogin = async () => {
     await signIn.social({
       provider: "google",
-      callbackURL: "/dashboard",
+      callbackURL: "/dashboard/client",
     });
   };
 
