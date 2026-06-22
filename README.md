@@ -1,38 +1,30 @@
 # TaskForge
 
-TaskForge is a freelance micro-task marketplace where clients can post tasks, freelancers can submit proposals, and projects are completed through a secure hiring and payment workflow. The platform includes role-based dashboards for Clients, Freelancers, and Admins, along with Stripe payment integration and Google authentication.
+TaskForge is a full-stack freelance micro-task marketplace where clients can post tasks, freelancers can submit proposals, and projects are completed through a secure hiring and payment workflow. The platform features role-based dashboards, Stripe payment integration, Google authentication, and an admin management system.
 
-## Live Links
-https://taskforge-client.vercel.app
+## Live Demo
 
-### Client Repository
+**Live Website:** https://taskforge-client.vercel.app
+
+**Client Repository:**
 https://github.com/masumgaibandha/taskforge-client
 
-### Server Repository
+**Server Repository:**
 https://github.com/masumgaibandha/taskforge-server
 
 ---
 
 ## Key Features
 
-1. Role-Based Authentication (Client, Freelancer, Admin) using Better Auth.
-2. Secure Stripe Checkout integration for hiring freelancers and processing payments.
-3. Dynamic task marketplace with search and category filtering.
-4. Admin dashboard for user management, task moderation, and transaction monitoring.
-5. Google Authentication and protected private routes with middleware.
+### Authentication & Security
 
----
-
-## Features
-
-### Authentication
-
-- Email & Password Login
-- Google Authentication
 - Better Auth Integration
+- Email & Password Authentication
+- Google Authentication
+- Secure Session Management
 - Protected Routes
 - Role-Based Access Control
-- Secure Session Management
+- Blocked User Protection
 
 ### Client Features
 
@@ -42,7 +34,7 @@ https://github.com/masumgaibandha/taskforge-server
 - View Posted Tasks
 - Review Freelancer Proposals
 - Hire Freelancers
-- Stripe Payment Integration
+- Secure Stripe Payment Integration
 - Payment History
 - Profile Management
 
@@ -53,14 +45,15 @@ https://github.com/masumgaibandha/taskforge-server
 - View Task Details
 - Submit Proposals
 - Track Proposal Status
-- View Earnings
+- Active Projects Management
+- Earnings Tracking
 - Profile Management
 
 ### Admin Features
 
 - Dashboard Overview
 - Manage Users
-- Block/Unblock Users
+- Block / Unblock Users
 - Manage Tasks
 - Delete Tasks
 - Transaction History
@@ -72,9 +65,10 @@ https://github.com/masumgaibandha/taskforge-server
 - Top Freelancers Section
 - Dynamic Platform Statistics
 - Responsive Design
-- Loading State
-- Error Page
+- Loading States
+- Error Handling
 - Custom 404 Page
+- Pagination Support
 
 ---
 
@@ -208,20 +202,40 @@ node index.js
 
 ---
 
-## Admin Credentials
+## Demo Credentials
+
+### Admin Account
 
 ```txt
-Admin Login credential: 
 Email: admin@taskforge.com
 Password: Admin@123
+```
 
+### Client Account
 
-Client Login: client@client.com
-Password: Masum@123
-
-Freelancer Login: freelancer@freelancer.com
+```txt
+Email: client@client.com
 Password: Masum@123
 ```
+
+### Freelancer Account
+
+```txt
+Email: freelancer@freelancer.com
+Password: Masum@123
+```
+
+---
+
+## Suggested Evaluation Workflow
+
+1. Login as Client and create a new task.
+2. Login as Freelancer and submit a proposal.
+3. Login as Client and review proposals.
+4. Hire a freelancer using Stripe Checkout.
+5. Verify project status updates.
+6. Login as Freelancer and review earnings and active projects.
+7. Login as Admin and manage users, tasks, and transactions.
 
 ---
 
@@ -242,5 +256,6 @@ src/
 ---
 
 ## Author
-Abdullah Masum
+
+**Abdullah Masum**
 Portfolio: https://masumdev.com
