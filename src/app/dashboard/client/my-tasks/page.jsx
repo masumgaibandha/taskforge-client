@@ -22,7 +22,7 @@ const MyTasksPage = async () => {
     reviewerEmail: user?.email,
   });
 
-  const reviewedTaskIds = reviews.map((review) => review.taskId);
+  const reviewedTaskIds = reviews.map((review) => String(review.taskId));
 
   const getStatusStyle = (status) => {
     if (status === "open") return "bg-cyan-500/10 text-cyan-300";
@@ -139,10 +139,8 @@ const MyTasksPage = async () => {
                   </Link>
                   {task.status === "completed" &&
                     task.freelancerEmail &&
-                    !task.verified && (
-                      <VerifyFreelancerButton
-                        freelancerEmail={task.freelancerEmail}
-                      />
+                    !reviewedTaskIds.includes(String(task._id)) && (
+                      <ReviewTaskButton task={task} />
                     )}
                   <DeleteTaskButton taskId={task._id} />
                   {task.status === "in-progress" && task.deliverableUrl && (
@@ -240,10 +238,8 @@ const MyTasksPage = async () => {
                             )}
                           {task.status === "completed" &&
                             task.freelancerEmail &&
-                            !task.verified && (
-                              <VerifyFreelancerButton
-                                freelancerEmail={task.freelancerEmail}
-                              />
+                            !reviewedTaskIds.includes(String(task._id)) && (
+                              <ReviewTaskButton task={task} />
                             )}
                           <DeleteTaskButton taskId={task._id} />
                         </div>
