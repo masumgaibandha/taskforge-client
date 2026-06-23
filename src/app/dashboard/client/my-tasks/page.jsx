@@ -1,13 +1,13 @@
 import { getClientTasks } from "@/lib/api/tasks";
-import { ArrowLeft, Eye, Pencil, TrashBin } from "@gravity-ui/icons";
+import { ArrowLeft, Eye, Pencil } from "@gravity-ui/icons";
 import Link from "next/link";
 import DeleteTaskButton from "./DeleteTaskButton";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import CompleteTaskButton from "./CompleteTaskButton";
 import ReviewTaskButton from "./ReviewTaskButton";
-import { getReviews } from "@/lib/api/reviews";
 import VerifyFreelancerButton from "./VerifyFreelancerButton";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { getReviews } from "@/lib/api/reviews";
 
 const MyTasksPage = async () => {
   const session = await auth.api.getSession({
@@ -18,6 +18,7 @@ const MyTasksPage = async () => {
 
   const data = await getClientTasks(user?.email);
   const tasks = data?.tasks || [];
+
   const reviews = await getReviews({
     reviewerEmail: user?.email,
   });
@@ -29,6 +30,13 @@ const MyTasksPage = async () => {
     if (status === "in-progress") return "bg-amber-500/10 text-amber-300";
     if (status === "completed") return "bg-emerald-500/10 text-emerald-300";
     return "bg-slate-500/10 text-slate-300";
+  };
+
+  const getStatusLabel = (status) => {
+    if (status === "in-progress") return "In Progress";
+    if (status === "completed") return "Completed";
+    if (status === "open") return "Open";
+    return status;
   };
 
   const formatDate = (date) => {
@@ -92,11 +100,11 @@ const MyTasksPage = async () => {
                   </div>
 
                   <span
-                    className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(
+                    className={`inline-flex shrink-0 whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(
                       task.status,
                     )}`}
                   >
-                    {task.status}
+                    {getStatusLabel(task.status)}
                   </span>
                 </div>
 
@@ -121,6 +129,19 @@ const MyTasksPage = async () => {
                       {task.proposalCount || 0}
                     </p>
                   </div>
+
+                  {task.deliverableUrl && (
+                    <div>
+                      <p className="text-slate-500">Deliverable</p>
+                      <a
+                        href={task.deliverableUrl}
+                        target="_blank"
+                        className="mt-1 inline-flex text-cyan-400 hover:underline"
+                      >
+                        View Work
+                      </a>
+                    </div>
+                  )}
                 </div>
 
                 <div className="mt-5 flex flex-wrap gap-2">
@@ -199,6 +220,16 @@ const MyTasksPage = async () => {
                     >
                       <td className="px-6 py-5">
                         <p className="font-semibold text-white">{task.title}</p>
+
+                        {task.deliverableUrl && (
+                          <a
+                            href={task.deliverableUrl}
+                            target="_blank"
+                            className="mt-2 inline-flex text-sm font-medium text-cyan-400 hover:underline"
+                          >
+                            View Deliverable →
+                          </a>
+                        )}
                       </td>
 
                       <td className="px-6 py-5 text-slate-400">
@@ -223,7 +254,7 @@ const MyTasksPage = async () => {
                             task.status,
                           )}`}
                         >
-                          {task.status}
+                          {getStatusLabel(task.status)}
                         </span>
                       </td>
 
@@ -231,14 +262,16 @@ const MyTasksPage = async () => {
                         <div className="flex justify-end gap-2">
                           <Link
                             href={`/tasks/${task._id}`}
-                            className="rounded-lg border border-slate-700 p-2 text-slate-300"
+                            title="View Task"
+                            className="rounded-lg border border-slate-700 p-2 text-slate-300 transition hover:border-cyan-500 hover:text-cyan-400"
                           >
                             <Eye className="size-4" />
                           </Link>
 
                           <Link
                             href={`/dashboard/client/my-tasks/${task._id}`}
-                            className="rounded-lg border border-slate-700 p-2 text-slate-300"
+                            title="Edit Task"
+                            className="rounded-lg border border-slate-700 p-2 text-slate-300 transition hover:border-amber-500 hover:text-amber-400"
                           >
                             <Pencil className="size-4" />
                           </Link>
@@ -247,11 +280,20 @@ const MyTasksPage = async () => {
                             task.deliverableUrl && (
                               <CompleteTaskButton taskId={task._id} />
                             )}
+
                           {task.status === "completed" &&
                             task.freelancerEmail &&
                             !reviewedTaskIds.includes(String(task._id)) && (
                               <ReviewTaskButton task={task} />
                             )}
+
+                          {task.status === "completed" &&
+                            task.freelancerEmail && (
+                              <VerifyFreelancerButton
+                                freelancerEmail={task.freelancerEmail}
+                              />
+                            )}
+
                           <DeleteTaskButton taskId={task._id} />
                         </div>
                       </td>
