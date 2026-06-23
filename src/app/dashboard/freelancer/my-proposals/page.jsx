@@ -38,6 +38,15 @@ const MyProposalsPage = async () => {
                   Bid: ${proposal.bidAmount} · Delivery: {proposal.deliveryTime}{" "}
                   Days
                 </p>
+
+                <p className="mt-1 text-xs text-slate-500">
+                  Sent:{" "}
+                  {new Date(proposal.createdAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </p>
               </div>
 
               <span className="w-fit rounded-full bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-300">
