@@ -23,9 +23,8 @@ const SubmitDeliverableForm = ({ taskId }) => {
 
     try {
       const res = await updateTask(taskId, {
-        status: "completed",
         deliverableUrl,
-        completedAt: new Date().toISOString(),
+        deliveredAt: new Date().toISOString(),
       });
 
       if (res.modifiedCount > 0) {

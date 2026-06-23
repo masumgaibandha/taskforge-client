@@ -4,6 +4,7 @@ import Link from "next/link";
 import DeleteTaskButton from "./DeleteTaskButton";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import CompleteTaskButton from "./CompleteTaskButton";
 
 const MyTasksPage = async () => {
   const session = await auth.api.getSession({
@@ -130,6 +131,9 @@ const MyTasksPage = async () => {
                   </Link>
 
                   <DeleteTaskButton taskId={task._id} />
+                  {task.status === "in-progress" && task.deliverableUrl && (
+                    <CompleteTaskButton taskId={task._id} />
+                  )}
                 </div>
               </div>
             ))}
@@ -192,7 +196,7 @@ const MyTasksPage = async () => {
 
                       <td className="px-6 py-5">
                         <span
-                          className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(
+                          className={`inline-flex whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${getStatusStyle(
                             task.status,
                           )}`}
                         >
@@ -215,6 +219,11 @@ const MyTasksPage = async () => {
                           >
                             <Pencil className="size-4" />
                           </Link>
+
+                          {task.status === "in-progress" &&
+                            task.deliverableUrl && (
+                              <CompleteTaskButton taskId={task._id} />
+                            )}
 
                           <DeleteTaskButton taskId={task._id} />
                         </div>
