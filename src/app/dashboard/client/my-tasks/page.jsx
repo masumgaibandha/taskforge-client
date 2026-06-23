@@ -123,29 +123,40 @@ const MyTasksPage = async () => {
                   </div>
                 </div>
 
-                <div className="mt-5 flex gap-2">
+                <div className="mt-5 flex flex-wrap gap-2">
                   <Link
                     href={`/tasks/${task._id}`}
-                    className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-center text-slate-300"
+                    title="View Task"
+                    className="rounded-lg border border-slate-700 p-2 text-slate-300 transition hover:border-cyan-500 hover:text-cyan-400"
                   >
-                    <Eye className="mx-auto size-4" />
+                    <Eye className="size-4" />
                   </Link>
 
                   <Link
                     href={`/dashboard/client/my-tasks/${task._id}`}
-                    className="flex-1 rounded-lg border border-slate-700 px-3 py-2 text-center text-slate-300"
+                    title="Edit Task"
+                    className="rounded-lg border border-slate-700 p-2 text-slate-300 transition hover:border-amber-500 hover:text-amber-400"
                   >
-                    <Pencil className="mx-auto size-4" />
+                    <Pencil className="size-4" />
                   </Link>
+
+                  {task.status === "in-progress" && task.deliverableUrl && (
+                    <CompleteTaskButton taskId={task._id} />
+                  )}
+
                   {task.status === "completed" &&
                     task.freelancerEmail &&
                     !reviewedTaskIds.includes(String(task._id)) && (
                       <ReviewTaskButton task={task} />
                     )}
-                  <DeleteTaskButton taskId={task._id} />
-                  {task.status === "in-progress" && task.deliverableUrl && (
-                    <CompleteTaskButton taskId={task._id} />
+
+                  {task.status === "completed" && task.freelancerEmail && (
+                    <VerifyFreelancerButton
+                      freelancerEmail={task.freelancerEmail}
+                    />
                   )}
+
+                  <DeleteTaskButton taskId={task._id} />
                 </div>
               </div>
             ))}
