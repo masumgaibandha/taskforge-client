@@ -84,7 +84,7 @@ const LoginPage = () => {
           ? "/dashboard/admin"
           : profile?.role === "freelancer"
             ? "/dashboard/freelancer"
-            : "/dashboard/client";
+            : "/";
 
       window.location.href = dashboardPath;
     } catch (error) {

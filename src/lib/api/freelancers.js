@@ -7,3 +7,11 @@ export const getFreelancers = async () => {
 
   return res.json();
 };
+
+export const getFreelancerById = async (id) => {
+  const res = await fetch(`${baseUrl}/api/freelancers/${id}`, {
+    cache: "no-store",
+  });
+
+  return res.json();
+};

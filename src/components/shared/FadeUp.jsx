@@ -2,13 +2,16 @@
 
 import { motion } from "motion/react";
 
-const FadeUp = ({ children }) => {
+const FadeUp = ({ children, delay = 0 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 25 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
+      transition={{
+        duration: 0.5,
+        delay,
+      }}
     >
       {children}
     </motion.div>

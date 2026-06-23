@@ -68,13 +68,20 @@ const FreelancerProfile = () => {
 
     const formData = new FormData(e.currentTarget);
 
+    const rawSkills = formData.get("skills") || "";
+
     const profileData = {
-      name: formData.get("name") || user?.name || "Client",
+      name: formData.get("name") || user?.name || "Freelancer",
       image: formData.get("image") || displayImage,
       phone: formData.get("phone"),
       location: formData.get("location"),
       website: formData.get("website"),
       bio: formData.get("bio"),
+      hourlyRate: Number(formData.get("hourlyRate") || 0),
+      skills: rawSkills
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter(Boolean),
     };
 
     const res = await updateUserProfile(user.email, profileData);
@@ -135,18 +142,50 @@ const FreelancerProfile = () => {
 
               <div className="mt-8 space-y-4">
                 <ProfileInfo icon={Envelope} text={displayEmail} />
+
                 <ProfileInfo
                   icon={FiPhone}
                   text={profile?.phone || "Not provided"}
                 />
+
                 <ProfileInfo
                   icon={FiMapPin}
                   text={profile?.location || "Not provided"}
                 />
+
                 <ProfileInfo
                   icon={FiGlobe}
                   text={profile?.website || "Not provided"}
                 />
+
+                {profile?.skills?.length > 0 && (
+                  <div className="pt-4">
+                    <p className="mb-3 text-sm font-semibold text-slate-300">
+                      Skills
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                      {profile.skills.map((skill) => (
+                        <span
+                          key={skill}
+                          className="rounded-full bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {profile?.hourlyRate > 0 && (
+                  <div className="pt-4">
+                    <p className="text-sm text-slate-400">Hourly Rate</p>
+
+                    <p className="mt-1 text-xl font-bold text-cyan-400">
+                      ${profile.hourlyRate}/hr
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </Card>
@@ -217,11 +256,26 @@ const FreelancerProfile = () => {
                   defaultValue={profile?.website || ""}
                   placeholder="https://example.com"
                 />
+                <Input
+                  name="hourlyRate"
+                  label="Hourly Rate"
+                  type="number"
+                  defaultValue={profile?.hourlyRate || ""}
+                  placeholder="Hourly rate"
+                />
+
+                <Input
+                  name="skills"
+                  label="Skills"
+                  defaultValue={profile?.skills?.join(", ") || ""}
+                  placeholder="Skills (ex. React, Next.js, MongoDB)"
+                />
 
                 <TextArea
                   name="bio"
                   label="About Freelancer"
                   defaultValue={profile?.bio || ""}
+                  placeholder="Your Bio"
                   className="min-h-32 text-slate-600"
                 />
 
