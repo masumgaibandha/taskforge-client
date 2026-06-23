@@ -49,6 +49,11 @@ const FreelancerPage = async () => {
                 <h2 className="mt-4 text-xl font-semibold text-white">
                   {freelancer.name || "Unnamed Freelancer"}
                 </h2>
+                {freelancer.verified && (
+                  <span className="mt-3 inline-flex rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+                    ✓ Verified Freelancer
+                  </span>
+                )}
 
                 <p className="mt-1 text-sm text-cyan-400">
                   ${freelancer.hourlyRate || 0}/hr

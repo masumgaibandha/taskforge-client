@@ -87,7 +87,7 @@ const ActiveProjectsPage = async () => {
                   )}
                 </div>
 
-                {task.status === "in-progress" && (
+                {task.status === "in-progress" && !task.deliverableUrl && (
                   <SubmitDeliverableForm taskId={task._id} />
                 )}
               </div>

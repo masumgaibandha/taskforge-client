@@ -5,6 +5,9 @@ import DeleteTaskButton from "./DeleteTaskButton";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import CompleteTaskButton from "./CompleteTaskButton";
+import ReviewTaskButton from "./ReviewTaskButton";
+import { getReviews } from "@/lib/api/reviews";
+import VerifyFreelancerButton from "./VerifyFreelancerButton";
 
 const MyTasksPage = async () => {
   const session = await auth.api.getSession({
@@ -15,6 +18,11 @@ const MyTasksPage = async () => {
 
   const data = await getClientTasks(user?.email);
   const tasks = data?.tasks || [];
+  const reviews = await getReviews({
+    reviewerEmail: user?.email,
+  });
+
+  const reviewedTaskIds = reviews.map((review) => review.taskId);
 
   const getStatusStyle = (status) => {
     if (status === "open") return "bg-cyan-500/10 text-cyan-300";
@@ -129,7 +137,13 @@ const MyTasksPage = async () => {
                   >
                     <Pencil className="mx-auto size-4" />
                   </Link>
-
+                  {task.status === "completed" &&
+                    task.freelancerEmail &&
+                    !task.verified && (
+                      <VerifyFreelancerButton
+                        freelancerEmail={task.freelancerEmail}
+                      />
+                    )}
                   <DeleteTaskButton taskId={task._id} />
                   {task.status === "in-progress" && task.deliverableUrl && (
                     <CompleteTaskButton taskId={task._id} />
@@ -224,7 +238,13 @@ const MyTasksPage = async () => {
                             task.deliverableUrl && (
                               <CompleteTaskButton taskId={task._id} />
                             )}
-
+                          {task.status === "completed" &&
+                            task.freelancerEmail &&
+                            !task.verified && (
+                              <VerifyFreelancerButton
+                                freelancerEmail={task.freelancerEmail}
+                              />
+                            )}
                           <DeleteTaskButton taskId={task._id} />
                         </div>
                       </td>

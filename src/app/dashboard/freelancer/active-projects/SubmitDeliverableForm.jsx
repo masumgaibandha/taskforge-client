@@ -29,7 +29,7 @@ const SubmitDeliverableForm = ({ taskId }) => {
 
       if (res.modifiedCount > 0) {
         toast.success("Deliverable submitted successfully.");
-        router.refresh();
+        window.location.reload();
       } else {
         toast.error(res.message || "Failed to submit deliverable.");
       }

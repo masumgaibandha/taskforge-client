@@ -31,6 +31,11 @@ const FreelancerDetailsPage = async ({ params }) => {
             <h1 className="mt-5 text-2xl font-bold text-white">
               {freelancer.name || "Unnamed Freelancer"}
             </h1>
+            {freelancer.verified && (
+              <span className="mt-3 inline-flex rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+                ✓ Verified Freelancer
+              </span>
+            )}
 
             <p className="mt-2 text-cyan-400">
               ${freelancer.hourlyRate || 0}/hr
@@ -38,7 +43,12 @@ const FreelancerDetailsPage = async ({ params }) => {
 
             <div className="mt-4 flex items-center justify-center gap-2 text-sm text-slate-300">
               <StarFill className="size-4 text-yellow-400" />
-              <span>Rating will appear after reviews</span>
+              <span className="font-semibold text-white">
+                {freelancer.averageRating || 0}
+              </span>
+              <span className="text-slate-400">
+                ({freelancer.totalReviews || 0} reviews)
+              </span>
             </div>
 
             <p className="mt-4 break-all text-sm text-slate-400">
@@ -75,12 +85,20 @@ const FreelancerDetailsPage = async ({ params }) => {
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               <div className="rounded-2xl border border-slate-800 bg-slate-950 p-5">
                 <p className="text-sm text-slate-400">Completed Jobs</p>
-                <h3 className="mt-2 text-2xl font-bold text-white">0</h3>
+                <h3 className="mt-2 text-2xl font-bold text-white">
+                  {freelancer.completedJobs || 0}
+                </h3>
               </div>
 
               <div className="rounded-2xl border border-slate-800 bg-slate-950 p-5">
                 <p className="text-sm text-slate-400">Average Rating</p>
-                <h3 className="mt-2 text-2xl font-bold text-white">0.0</h3>
+                <h3 className="mt-2 flex items-center gap-2 text-2xl font-bold text-white">
+                  <StarFill className="size-5 text-yellow-400" />
+                  {freelancer.averageRating || 0}
+                </h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  {freelancer.totalReviews || 0} reviews
+                </p>
               </div>
 
               <div className="rounded-2xl border border-slate-800 bg-slate-950 p-5">
@@ -89,6 +107,47 @@ const FreelancerDetailsPage = async ({ params }) => {
                   ${freelancer.hourlyRate || 0}
                 </h3>
               </div>
+            </div>
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold text-white">
+                Client Reviews
+              </h2>
+
+              {!freelancer.reviews || freelancer.reviews.length === 0 ? (
+                <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-950 p-5">
+                  <p className="text-slate-400">No reviews yet.</p>
+                </div>
+              ) : (
+                <div className="mt-4 grid gap-4">
+                  {freelancer.reviews.map((review) => (
+                    <div
+                      key={review._id}
+                      className="rounded-2xl border border-slate-800 bg-slate-950 p-5"
+                    >
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                          <p className="font-semibold text-white">
+                            {review.taskTitle || "Completed Task"}
+                          </p>
+
+                          <p className="mt-1 text-sm text-slate-500">
+                            Reviewed by {review.reviewerEmail}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-1 text-yellow-400">
+                          <StarFill className="size-4" />
+                          <span className="font-semibold">{review.rating}</span>
+                        </div>
+                      </div>
+
+                      <p className="mt-4 leading-6 text-slate-400">
+                        {review.comment}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

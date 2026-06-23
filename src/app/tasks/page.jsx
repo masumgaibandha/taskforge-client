@@ -1,5 +1,6 @@
 import { getClientTasks } from "@/lib/api/tasks";
 import Link from "next/link";
+import TaskFilters from "./TaskFilters";
 
 const TasksPage = async ({ searchParams }) => {
   const params = await searchParams;
@@ -39,35 +40,7 @@ const TasksPage = async ({ searchParams }) => {
           </p>
         </div>
 
-        <form
-          action="/tasks"
-          className="mb-8 grid gap-4 rounded-2xl border border-slate-800 bg-slate-900/50 p-5 md:grid-cols-3"
-        >
-          <input
-            name="search"
-            type="text"
-            defaultValue={search}
-            placeholder="Search tasks..."
-            className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-300 outline-none focus:border-cyan-500"
-          />
-
-          <select
-            name="category"
-            defaultValue={category}
-            className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-300 outline-none focus:border-cyan-500"
-          >
-            <option value="">All Categories</option>
-            <option value="Design">Design</option>
-            <option value="Writing">Writing</option>
-            <option value="Development">Development</option>
-            <option value="Marketing">Marketing</option>
-            <option value="Other">Other</option>
-          </select>
-
-          <button className="rounded-xl bg-cyan-500 px-4 py-3 font-semibold text-white">
-            Search
-          </button>
-        </form>
+        <TaskFilters search={search} category={category} />
 
         {(search || category) && (
           <div className="mb-6 flex flex-wrap items-center gap-3">
